@@ -100,6 +100,7 @@ app.get('/departments/:departmentName', function(req , res){
   var callbackCount = 0;
   let departmentName = req.params.departmentName;
   var context = {};
+  context.departmentName = departmentName;
   var mysql = req.app.get('mysql');
   getDepartments(res, mysql, context, complete);
   getProducts(res, mysql, context, departmentName, complete);
