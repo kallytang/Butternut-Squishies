@@ -35,7 +35,7 @@ function getDepartments(res, mysql, context, complete){
           res.end();
       }
       context.departments = results;
-      //console.log(results);
+      console.log(results);
       complete();
   });
 }
