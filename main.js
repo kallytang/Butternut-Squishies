@@ -73,7 +73,30 @@ function getAllProducts(res, mysql, context, complete){
           res.end();
       }
       context.products = results;
-      console.log(results);
+      
+      complete();
+  });
+}
+function getAllOrders(res, mysql, context, complete){
+  mysql.pool.query("SELECT * FROM `Orders`", function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.orders = results;
+      
+      complete();
+  });
+}
+
+function getAllCustomers(res, mysql, context, complete){
+  mysql.pool.query("SELECT * FROM `Customers`", function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.customers = results;
+      
       complete();
   });
 }
@@ -161,10 +184,10 @@ app.get('/account', function(req, res){
   getCustId(res, mysql, context, complete);
   getAccount(res, mysql, context, custID, complete);
   function complete(){
-      callbackCount++;
-      if(callbackCount >= 2){
+  //     callbackCount++;
+  //     if(callbackCount >= 2){
           res.render('account.handlebars', context);
-      }
+      // }
   }
 });
 
@@ -181,9 +204,12 @@ app.get('/admin', function(req,res){
   var mysql = req.app.get('mysql');
  
   getAllProducts(res, mysql, context, complete);
-    function complete(){
+  getAllCustomers(res, mysql, context, complete);
+  getAllOrders(res, mysql, context, complete);
+  
+  function complete(){
       // callbackCount++;
-      // if(callbackCount >= 2){
+      // if(callbackCount >= 3){
         res.render('admin', context);
       // }
      
