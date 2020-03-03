@@ -35,6 +35,10 @@ app.get('/accounts', function(req,res){
   res.render('accounts', context);
 });
 
+app.get('/register', function(req,res){
+  var context = {};
+  res.render('register', context);
+});
 
 function getDepartments(res, mysql, context, complete){
   mysql.pool.query("SELECT `department_id`, `name` FROM `Departments`", function(error, results, fields){
@@ -51,6 +55,18 @@ function getDepartments(res, mysql, context, complete){
 function getProducts(res, mysql, context, deptName, complete){
   var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `department_id`=(SELECT `department_id` FROM `Departments` WHERE `name`=?)";
   var inserts = [deptName];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.products = results;
+      console.log(results);
+      complete();
+  });
+}
+function getAllProducts(res, mysql, context, complete){
+  var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `department_id`=(SELECT `department_id` FROM `Departments`)";
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
@@ -152,6 +168,29 @@ app.get('/account', function(req, res){
   }
 });
 
+app.get('/checkout', function(req,res){
+  var context = {};
+  res.render('checkout', context);
+});
+
+
+app.get('/admin', function(req,res){
+  var context = {};
+  var context = {};
+  //context.jsscripts = ["squishies.js"];
+  var mysql = req.app.get('mysql');
+ 
+  // getAllProducts(res, mysql, context, complete);
+  //   function complete(){
+  //     callbackCount++;
+  //     if(callbackCount >= 2){
+  //       res.render('admin', context);
+  //     }
+     
+  // }
+  res.render('admin', context);
+  
+});
 
 
 app.use(function(req,res){
