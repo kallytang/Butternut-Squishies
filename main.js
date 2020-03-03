@@ -9,6 +9,10 @@ var bodyParser = require('body-parser');
 
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
+// app.use(cookieParser());
+
+// var cookie = req.cookies.cookieName;
+
 
 app.engine('handlebars', handlebars.engine);
 app.use(bodyParser.urlencoded({extended:true}));
@@ -117,7 +121,23 @@ app.get('/departments/:departmentName', function(req , res){
   }
 });
 
-app.get('/account/:custID', function(req, res){
+// app.get('/account', function(req, res){
+//   var callbackCount = 0;
+//   let custID = req.params.custID
+//   var context = {};
+//   var mysql = req.app.get('mysql');
+//   getCustId(res, mysql, context, complete);
+//   getAccount(res, mysql, context, custID, complete);
+//   function complete(){
+//       callbackCount++;
+//       if(callbackCount >= 2){
+//           res.render('account.handlebars', context);
+//       }
+//   }
+// });
+
+//for cookies session
+app.get('/account', function(req, res){
   var callbackCount = 0;
   let custID = req.params.custID
   var context = {};
@@ -131,6 +151,7 @@ app.get('/account/:custID', function(req, res){
       }
   }
 });
+
 
 
 app.use(function(req,res){

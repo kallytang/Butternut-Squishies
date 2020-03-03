@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Butternut Squishies Grocery Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="admin.css">
+    <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
+
+  </head>
+  <body>
+
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+      <li class="registerButtonSection" ><a class="register" href="register.html">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="/">Home</a></li>
+        <li><a class="tab" href="departments">Departments</a></li>
+        <li><a class="tab" href="account.html">Account</a></li>
+        <li><a class="active tab" href="admin.html">Admin</a></li>
+        <li><a class ="checkoutBox" href="checkout.html">Check Out</a></li>
+    </ul>
+
+    <form>
+    <h2>Add New Department</h2>
+      <fieldset>
+        <div><label > Department Name:
+          <input type ="text" max="254" name="departmentName" id="newDepartment">
+        </label></div>
+        <input type="submit" value="add department" id="addDepartment">
+      </fieldset>
+    </form>
+
+
+     <form>
+     <h2>Add New Product</h2>
+      <fieldset>
+        <div><label >Product Name:
+          <input type ="text" max="254" name="productName" id="newProduct">
+        </label>
+        <label>
+        Price:<input type ="text"  max="254" name= "nameInput" id= "nameInput"><br>
+        </label>
+        </div>
+        <div>
+        Select Department:<br>
+        <input type="radio" name="department" value="produce">Produce<br>
+        <input type="radio" name="department" value="dryGoods">Dry Goods<br>
+        <input type="radio" name="department" value="beverages">Beverages<br>
+        <input type="radio" name="department" value="bakery">Bakery<br>
+        </div>
+
+        <input type="submit" value="add product" id="addProduct">
+      </fieldset>
+    </form>
+
+
+    <h2 class="title1">Update/Delete Products</h2>
+    <table>
+      <caption>Products<caption>
+      <thead>
+        <tr>
+          <th> Name </th>
+          <th> Description </th>
+          <th> Department </th>
+          <th> Price </th>
+          <th> Quantity/Stock </th>
+          <th> Sale </th>
+          <th>Limit</th>
+
+          <th> Image Path</th>
+          <th> Update </th>
+          <th> Delete </th>
+        </tr>
+      </thead>
+        {{#each product }}
+        <tr>
+          <td>{{name}}</td>
+          <td>{{description}}</td>
+          <td>{{department}}</td>
+          <td>{{price}}</td>
+          <td>{{stock}}</td>
+          <td>{{sale}}</td>
+          <td>{{limit}}</td>
+          <td>{{image_path}} </td>
+          <td>
+            <form>
+              <input type="button" value="update">
+            </form>
+          </td>
+          <td>
+            <form>
+              <input type="button" value="delete">
+            </form></td>
+        </tr>
+        {{/each}}
+    
+    </table>
+
+    <h2 class="title1">Update/Delete Orders</h2>
+    <table>
+      <caption>Orders<caption>
+      <thead>
+        <tr>
+          <th>OrderID </th>
+          <th>Customer Name</th>
+          <th>Order Status </th>
+          <th>Order Date </th>
+          <th>Recieved Date</th>
+          <th>Delivery Method</th>
+          <th>Note</th>
+          <th>Shipped-Date</th>
+          <th>Order Total</th>
+          <th>Update </th>
+          <th>Delete </th>
+        </tr>
+      </thead>
+      {{#each Orders}}
+        <tr>
+          <td>{{order_id}}</td>
+          <td>{{name}}</td>
+          <td>{{order_status}}</td>
+          <td>{{order_date}}</td>
+          <td>{{received_date}}</td>
+          <td>{{delivery_method}}</td>
+          <td>{{note}}</td>
+          <td>{{shipped_date}}</td>
+          <td>{{order_total}}</td>
+          <td>
+            <form>
+              <input type="button" value="update">
+            </form>
+          </td>
+          <td>
+            <form>
+              <input type="button" value="delete">
+            </form></td>
+        </tr>
+        {{/each}}
+        
+    </table>
+
+     <h2 class="title1">Delete Customer</h2>
+    <table>
+      <caption>Customers<caption>
+      <thead>
+        <tr>
+          <th> Customer ID </th>
+          <th> Customer Name</th>
+          <th> Email </th>
+          <th> Address</th>
+          <th> City</th>
+          <th> State</th>
+          <th> Zip</th>
+          <th> Phone</th>
+          <th> Delete </th>
+        </tr>
+      </thead>
+      {{#each Customers}}
+        <tr>
+          <td>{{customer_id}}</td>
+          <td>{{name}}</td>
+          <td>
+            <div>
+              {{email}}
+            </div>
+          </td>
+           <td>{{street_address}}</td>
+           <td>{{city}}</td>
+           <td>{{state}}</td>
+           <td>{{zipcode}}</td>
+           <td>{{phone}}</td>
+
+          <td>
+            <form>
+            <input type="hidden" value={{customer_id}}>
+              <input class="button" type="button" value="delete">
+            </form></td>
+        </tr>
+        {{/each}}
+         
+        
+    </table>
+
+
+
+
+
+  </body>
+</html>

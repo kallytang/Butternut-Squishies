@@ -43,7 +43,7 @@
         </form>
         <form class="customerFormUpdate">
           <fieldset>
-            <div>Street Address: {{address}}</div>
+            <div>Street Address: {{street_address}}</div>
             <input type="text" name="street">
             <input type ="submit" value="Update">
           </fieldset>
@@ -76,6 +76,7 @@
       <div>
         <h2 class="title"> Orders </h2>
 
+      {{#each Orders}}
       <div class="orderBox">
       <h3 class="order">Order#:101220</h3>
       <h4 class="order">Order Date: 5/10/2020</h4>
@@ -92,65 +93,30 @@
                 <th class="thead">Subtotal:</th>
             </tr>
             <tr>
-                <td class="itemsbox imagesec">
-                    Organic Apples
+                <td class="itemsbox ">
+                    {{Organic Apples}}
                 </td>
-                <td class="itemsbox quantity">
-                  1
+                <td class="itemsbox ">
+                  {{1}}
                 </td>
-                <td class="itemsbox quantity">
-                  N/A
+                <td class="itemsbox ">
+                 {{ N/A}}
                 </td>
-                <td class="itemsbox quantity">
-                  $1.00
+                <td class="itemsbox ">
+                  {{$1.00}}
                 </td>
-                <td class="itemsbox subtotal">
-                  $1.00
+                <td class="itemsbox ">
+                  {{$1.00}}
 
                 </td>
 
 
-            </tr><tr>
-                <td class="itemsbox imagesec">
-                  Organic Bananas
-                </td>
-                <td class="itemsbox quantity">
-                  1
-                </td>
-                <td class="itemsbox quantity">
-                  N/A
-                </td>
-                <td class="itemsbox quantity">
-                 $2.00
-                </td>
-                <td class="itemsbox subtotal">
-                  $2.00
-                </td>
-
-            </tr>
-            <tr>
-                <td class="itemsbox imagesec">
-                  Organic Carrots
-                </td>
-                <td class="itemsbox quantity">
-                  1
-                </td>
-                <td class="itemsbox quantity">
-                  N/A
-                </td>
-                <td class="itemsbox quantity">
-                 $4.00
-                </td>
-                <td class="itemsbox subtotal">
-                  $4.00
-                </td>
-
-            </tr>
+            
         </table>
     </div>
      <h4 class="title"> Total: $7.00 </h4>
     </div>
-
+    {{/each}}
 
     </div>
 
