@@ -29,6 +29,9 @@
 form{
     width: 100%;
 }
+.products-divider{
+    padding-bottom: 10%;
+}
 
 
 .quantityBox{
