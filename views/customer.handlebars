@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Butternut Squishies Grocery Store</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="account.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
+
+  </head>
+  <body>
+
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+    <li class="registerButtonSection" ><a class="register" href="register.html">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="home.html">Home</a></li>
+        <li><a class="tab" href="departments.html">Departments</a></li>
+        <li><a class="active tab" href="account.html">Account</a></li>
+        <li><a class="tab" href="admin.html">Admin</a></li>
+        <li><a class ="checkoutBox" href="checkout.html">Check Out</a></li>
+    </ul>
+
+  
+
+      <div>
+        <h1 class="title">Account Information</h1>
+      </div>
+
+        <form class="customerFormUpdate" method="post">
+          <fieldset>
+            <div>Name: {{name}}</div> <input type="text" name="firstname">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+          <fieldset>
+            <div>Email: {{email}}</div>
+            <input type="text" name="email">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+          <fieldset>
+            <div>Street Address: {{address}}</div>
+            <input type="text" name="street">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+        <fieldset>
+            <div>City: {{city}}</div>
+            <input type="text" name="city">
+            <input type ="submit" value="Update">
+        </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+        <fieldset>
+            <div>State: {{state}}</div>
+            <input type="text" name="state">
+            <input type ="submit" value="Update">
+        </fieldset>
+        <fieldset>
+            <div>ZipCode: {{zipcode}}</div>
+            <input type="text" name="zip">
+            <input type ="submit" value="Update">
+        </fieldset>
+         <fieldset>
+            <div>Phone: {{phone}}</div>
+            <input type="text" name="phone">
+            <input type ="submit" value="Update">
+        </fieldset>
+
+        </form>
+      <div>
+        <h2 class="title"> Orders </h2>
+
+      <div class="orderBox">
+      <h3 class="order">Order#:101220</h3>
+      <h4 class="order">Order Date: 5/10/2020</h4>
+      <h4 class="order">Order Type: Pick-Up</h4>
+        <h4 class="order">Order Status: Ready For Pick Up</h4>
+
+       <div class ="products-divider">
+        <table class="products-table">
+            <tr>
+                <th class="thead">Product Name:</th>
+                <th class="thead quantity">Quantity:</th>
+                <th class="thead quantity">Discount:</th>
+                <th class="thead quantity">Subtotal:</th>
+                <th class="thead">Subtotal:</th>
+            </tr>
+            <tr>
+                <td class="itemsbox imagesec">
+                    Organic Apples
+                </td>
+                <td class="itemsbox quantity">
+                  1
+                </td>
+                <td class="itemsbox quantity">
+                  N/A
+                </td>
+                <td class="itemsbox quantity">
+                  $1.00
+                </td>
+                <td class="itemsbox subtotal">
+                  $1.00
+
+                </td>
+
+
+            </tr><tr>
+                <td class="itemsbox imagesec">
+                  Organic Bananas
+                </td>
+                <td class="itemsbox quantity">
+                  1
+                </td>
+                <td class="itemsbox quantity">
+                  N/A
+                </td>
+                <td class="itemsbox quantity">
+                 $2.00
+                </td>
+                <td class="itemsbox subtotal">
+                  $2.00
+                </td>
+
+            </tr>
+            <tr>
+                <td class="itemsbox imagesec">
+                  Organic Carrots
+                </td>
+                <td class="itemsbox quantity">
+                  1
+                </td>
+                <td class="itemsbox quantity">
+                  N/A
+                </td>
+                <td class="itemsbox quantity">
+                 $4.00
+                </td>
+                <td class="itemsbox subtotal">
+                  $4.00
+                </td>
+
+            </tr>
+        </table>
+    </div>
+     <h4 class="title"> Total: $7.00 </h4>
+    </div>
+
+
+    </div>
+
+  </body>
+</html>

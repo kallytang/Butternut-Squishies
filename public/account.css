@@ -1,0 +1,53 @@
+form{
+    margin:5px;
+}
+.title{
+    text-align:center;
+}
+.itemsbox
+{
+    margin:0;
+    height:10px;
+    border: 2px solid rgb(163, 185, 235);
+
+}
+.products-table{
+    width:80%;
+    border-collapse:collapse;
+    border: 2px solid rgb(163, 185, 235);
+    margin-left:auto;
+    margin-right:auto;
+    text-align:center;
+
+}
+.customerFormUpdate {
+    width: 400px;
+    margin:0 auto;   
+   
+  }
+.search-container{
+  font-size: 23px;
+}
+.thead{
+    border: 2px solid rgb(163, 185, 235);
+    background-color: aliceblue;
+}
+.quantity{
+    width: 10 px;
+}
+.subtotal{
+    width:20%;
+}
+.order{
+    text-align:center;
+}
+.orderBox{
+    border: 2px solid rgb(163, 185, 235);
+    padding-bottom: 10px;
+}
+.navBar{
+    text-align: center;
+    float:center;
+    
+}
+

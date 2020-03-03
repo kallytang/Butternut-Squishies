@@ -26,6 +26,10 @@ app.get('/', function(req,res){
   var context = {};
   res.render('home', context);
 });
+app.get('/accounts', function(req,res){
+  var context = {};
+  res.render('accounts', context);
+});
 
 
 function getDepartments(res, mysql, context, complete){

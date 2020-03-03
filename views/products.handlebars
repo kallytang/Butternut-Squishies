@@ -20,8 +20,7 @@
         <li><a class ="checkoutBox" href="checkout.html">Check Out</a></li>
     </ul>
 
-    <h1>{{departments.name}}</h1>
-        
+    
 
 
     <div class="departmentList">
@@ -49,11 +48,12 @@
  <th class="thead">Add to Cart</th>
 </tr>
 
+
 {{#each products}}
         <tr>
                 <td class="itemsbox imagesec">
                     <p class="prodName">{{name}}</p>
-                     <img class="prodImage" src="images/apple.jpg">   
+                     <img class="prodImage" src={{image_path}}>   
                 </td>
                 <td class="itemsbox description">
                 <p>{{description}}</p>
