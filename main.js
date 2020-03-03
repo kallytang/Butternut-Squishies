@@ -61,13 +61,13 @@ function getProducts(res, mysql, context, deptName, complete){
           res.end();
       }
       context.products = results;
-      console.log(results);
+     
       complete();
   });
 }
+
 function getAllProducts(res, mysql, context, complete){
-  var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `department_id`=(SELECT `department_id` FROM `Departments`)";
-  mysql.pool.query(sql, inserts, function(error, results, fields){
+  mysql.pool.query("SELECT * FROM `Products`", function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
           res.end();
@@ -180,15 +180,15 @@ app.get('/admin', function(req,res){
   //context.jsscripts = ["squishies.js"];
   var mysql = req.app.get('mysql');
  
-  // getAllProducts(res, mysql, context, complete);
-  //   function complete(){
-  //     callbackCount++;
-  //     if(callbackCount >= 2){
-  //       res.render('admin', context);
-  //     }
+  getAllProducts(res, mysql, context, complete);
+    function complete(){
+      // callbackCount++;
+      // if(callbackCount >= 2){
+        res.render('admin', context);
+      // }
      
-  // }
-  res.render('admin', context);
+  }
+  // res.render('admin', context);
   
 });
 
