@@ -41,7 +41,7 @@
   <div>
     {{#each departments}}
         <div class ="products-divider box">
-              <a href="/departments/{{name}}"> {{name}} </a>
+              <a class="depLinks" text-decoration= "none"; style="text-decoration:none" href="/departments/{{name}}"> {{name}} </a>
               <input type="hidden" value={{department_id}} id="department_id">
         </div>
     {{/each}}

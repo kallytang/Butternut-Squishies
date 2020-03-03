@@ -14,7 +14,7 @@
         <li class="registerButtonSection" ><a class="register" href="register.html">Register</a></li>
     <ul class="nav">
         <li><a class="tab" href="/">Home</a></li>
-        <li><a class="active tab" href="departments">Departments</a></li>
+        <li><a class="active tab" href="/departments">Departments</a></li>
         <li><a class="tab" href="accounts">Account</a></li>
         <li><a class="tab" href="admin">Admin</a></li>
         <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
@@ -50,28 +50,28 @@
 
 
 {{#each products}}
-        <tr>
-                <td class="itemsbox imagesec">
-                    <p class="prodName">{{name}}</p>
-                     <img class="prodImage" src={{image_path}}>   
-                </td>
-                <td class="itemsbox description">
-                <p>{{description}}</p>
-                </td>
-                <td class="itemsbox priceInfo">
-                <p>{{price}}</p>
-                <p class="limit"></p>
-                <p></p>
-                </td>
-                <td class="itemsbox quantity">
-                    <form method="post">
-                    <input class="quantityBox" type="number" name="points" step="1">
-                    </form>
-                </td>
-                <td class="itemsbox submitButton">
-                   <button type="submit" form="form1" class="add" value="addToCart">Add to cart</button>
-                </td>
-            </tr>
+  <tr>
+      <td class="itemsbox imagesec">
+          <p class="prodName">{{name}}</p>
+            <img class="prodImage" src={{image_path}}>   
+      </td>
+      <td class="itemsbox description">
+      <p>{{description}}</p>
+      </td>
+      <td class="itemsbox priceInfo">
+      <p>{{price}}</p>
+      <p class="limit"></p>
+      <p></p>
+      </td>
+      <td class="itemsbox quantity">
+          <form method="post">
+          <input class="quantityBox" type="number" name="points" step="1">
+          </form>
+      </td>
+      <td class="itemsbox submitButton">
+          <button type="submit" form="form1" class="add" value="addToCart">Add to cart</button>
+      </td>
+    </tr>
 {{/each}}
 </tbody>
 </table>
