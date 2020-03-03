@@ -199,7 +199,7 @@ app.get('/checkout', function(req,res){
 
 app.get('/admin', function(req,res){
   var context = {};
-  var context = {};
+  var callbackCount=0;
   //context.jsscripts = ["squishies.js"];
   var mysql = req.app.get('mysql');
  
@@ -208,10 +208,10 @@ app.get('/admin', function(req,res){
   getAllOrders(res, mysql, context, complete);
   
   function complete(){
-      // callbackCount++;
-      // if(callbackCount >= 3){
+      callbackCount++;
+      if(callbackCount >= 3){
         res.render('admin', context);
-      // }
+      }
      
   }
   // res.render('admin', context);
