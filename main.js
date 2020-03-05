@@ -3,15 +3,17 @@
     handlebars for HTML templates  
 */
 
+
+
+
 var express = require('express');
+
 var mysql = require('./dbcon.js');
 var bodyParser = require('body-parser');
 
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
-// app.use(cookieParser());
 
-// var cookie = req.cookies.cookieName;
 
 
 app.engine('handlebars', handlebars.engine);
@@ -20,6 +22,22 @@ app.use('/static', express.static('public'));
 app.set('view engine', 'handlebars');
 app.set('port', process.argv[2]);
 app.set('mysql', mysql);
+
+
+
+function getAccount(res, mysql, context, id, complete){
+  var sql = "SELECT `customer_id`, `name`, `email`, `street_address`, `city`, `state`,  `zipcode`, `phone` FROM `Customers` WHERE `email`= ?";
+  var inserts = [custEmail];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.account = results[0];
+      complete();
+  });
+}
+//
 
 
 
@@ -34,6 +52,9 @@ app.get('/accounts', function(req,res){
   var context = {};
   res.render('accounts', context);
 });
+
+
+
 
 app.get('/register', function(req,res){
   var context = {};
@@ -101,18 +122,7 @@ function getAllCustomers(res, mysql, context, complete){
   });
 }
 
-function getCustId(res, mysql, context, id, complete){
-  var sql = "SELECT `customer_id` FROM `Customers` WHERE `email`= ?";
-  var inserts = [custEmail];
-  mysql.pool.query(sql, inserts, function(error, results, fields){
-      if(error){
-          res.write(JSON.stringify(error));
-          res.end();
-      }
-      context.person = results[0];
-      complete();
-  });
-}
+
 
 function getAccount(res, mysql, context, custid, complete){
   var sql = "SELECT `customer_id`, `name`, `email`, `street_address`, `city`, `state`,  `zipcode`, `phone` FROM `Customers` WHERE `email`= ?";
@@ -122,10 +132,100 @@ function getAccount(res, mysql, context, custid, complete){
           res.write(JSON.stringify(error));
           res.end();
       }
-      context.account = results[0];
+      context.account = results.customer_id;
       complete();
   });
 }
+
+function getCustId(res, mysql, context, id, complete){
+        var sql = "SELECT `customer_id` FROM `Customers` WHERE `email`= ?";
+        var inserts = [custEmail];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            context.custId = results[0];
+            complete();
+        });
+        console.log(custId);
+    }
+    function addOrder(res, mysql, custId, orderDelvMeth, complete){
+        var sql = "INSERT INTO `Orders`(`customer_id`,`delivery_method`) VALUES (?, ?)";
+        var inserts = [custId, orderDelvMeth];
+        mysql.pool.query(sql, inserts, function(error, results, fields){
+            if(error){
+                res.write(JSON.stringify(error));
+                res.end();
+            }
+            //context.person = results[0];
+            complete();
+        });
+    }
+    app.post('/departments', function(req, res){
+      var callbackCount = 0;
+      let custID = req.body.custID;
+      let orderDelvMeth = req.body.orderDelvMeth;
+      var context = {};
+      var mysql = req.app.get('mysql');
+      getCustId(res, mysql, context, complete);
+      addOrder(res, mysql, custID, orderDelvMeth, complete);
+      function complete(){
+          callbackCount++;
+          if(callbackCount >= 2){
+              res.render('departments.handlebars', context);
+          }
+      }
+    });
+
+
+
+
+    function getCustId(res, mysql, context, custEmail, complete){
+      console.log("in customer id ");
+      var sql = "SELECT `customer_id` FROM `Customers` WHERE `email`= ?";
+      var inserts = [custEmail];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+          if(error){
+              res.write(JSON.stringify(error));
+              res.end();
+          }
+          context.custId = results[0];
+          complete();
+      });
+      console.log(custId);
+      console.log("in customer id ");
+  }
+  function addOrder(res, mysql, context, custId, orderDelvMeth, complete){
+      var sql = "INSERT INTO `Orders`(`customer_id`,`delivery_method`) VALUES (?, ?)";
+      var inserts = [custId, orderDelvMeth];
+      mysql.pool.query(sql, inserts, function(error, results, fields){
+          if(error){
+              res.write(JSON.stringify(error));
+              res.end();
+          }
+          //context.person = results[0];
+          complete();
+      });
+  }
+  app.post('/departments', function(req, res){
+    console.log("in app post departments");
+    var callbackCount = 0;
+    let custEmail = req.body.custEmail;
+    let orderDelvMeth = req.body.orderDelvMeth;
+    var context = {};
+    var mysql = req.app.get('mysql');
+    getCustId(res, mysql, context, custEmail,  complete);
+    addOrder(res, mysql, context, custID, orderDelvMeth, complete);
+    function complete(){
+        callbackCount++;
+        if(callbackCount >= 2){
+            res.render('departments.handlebars', context);
+        }
+    }
+    console.log("in app post departments");
+  });
+
 
 app.get('/departments', function(req, res){
   // var callbackCount = 0;
@@ -141,6 +241,7 @@ app.get('/departments', function(req, res){
       // }
     res.render('departments.handlebars', context);
   }
+  console.log("i'm here");
 });
 
 app.get('/departments/:departmentName', function(req , res){
@@ -175,7 +276,8 @@ app.get('/departments/:departmentName', function(req , res){
 //   }
 // });
 
-//for cookies session
+//for cookies session?
+
 app.get('/account', function(req, res){
   var callbackCount = 0;
   let custID = req.params.custID
@@ -190,6 +292,16 @@ app.get('/account', function(req, res){
       // }
   }
 });
+
+
+
+
+
+
+
+
+
+
 
 app.get('/checkout', function(req,res){
   var context = {};
