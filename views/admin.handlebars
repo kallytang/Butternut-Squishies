@@ -31,6 +31,18 @@
       </fieldset>
     </form>
 
+    <br>
+    <table>
+      <th>Department Id</th>
+      <th>Department Name</th>
+
+      {{#each departments}}
+      <tr>
+        <td>{{department_id}}</td>
+        <td>{{name}}</td>
+        </tr>
+      {{/each}}
+    </table>
 
      <form>
      <h2>Add New Product</h2>
@@ -60,6 +72,7 @@
       <caption>Products<caption>
       <thead>
         <tr>
+          <th> Product Id </th>
           <th> Name </th>
           <th> Description </th>
           <th> Department </th>
@@ -75,6 +88,7 @@
       </thead>
         {{#each products }}
         <tr>
+          <td>{{product_id}}</td>
           <td>{{name}}</td>
           <td>{{description}}</td>
           <td>{{department}}</td>
@@ -89,12 +103,14 @@
             </form>
           </td>
           <td>
-            <form>
-              <input type="button" value="delete">
-            </form></td>
+            <form action="/admin" method="post">
+            <input type="hidden" name= "product_id" value={{product_id}}>
+              <input class="button" type="submit" value="delete">
+            </form>
+          </td>
         </tr>
         {{/each}}
-    
+
     </table>
 
     <h2 class="title1">Update/Delete Orders</h2>
@@ -132,12 +148,14 @@
             </form>
           </td>
           <td>
-            <form>
-              <input type="button" value="delete">
-            </form></td>
+            <form action="/admin" method="post">
+            <input type="hidden" name="order_id" value={{order_id}}>
+              <input class="button" type="submit" value="delete">
+            </form>
+          </td>
         </tr>
         {{/each}}
-        
+
     </table>
 
      <h2 class="title1">Delete Customer</h2>
@@ -172,14 +190,15 @@
            <td>{{phone}}</td>
 
           <td>
-            <form>
-            <input type="hidden" value={{customer_id}}>
-              <input class="button" type="button" value="delete">
-            </form></td>
+            <form action="/admin" method="post">
+            <input type="hidden" name= "customer_id" value={{customer_id}}>
+              <input class="button" type="submit" value="delete">
+            </form>
+          </td>
         </tr>
         {{/each}}
-         
-        
+
+
     </table>
 
 

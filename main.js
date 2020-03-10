@@ -1,6 +1,6 @@
-/*  
-    Uses express, dbcon for database connection, body parser to parse form data 
-    handlebars for HTML templates  
+/*
+    Uses express, dbcon for database connection, body parser to parse form data
+    handlebars for HTML templates
 */
 
 
@@ -22,22 +22,6 @@ app.use('/static', express.static('public'));
 app.set('view engine', 'handlebars');
 app.set('port', process.argv[2]);
 app.set('mysql', mysql);
-
-
-
-function getAccount(res, mysql, context, id, complete){
-  var sql = "SELECT `customer_id`, `name`, `email`, `street_address`, `city`, `state`,  `zipcode`, `phone` FROM `Customers` WHERE `email`= ?";
-  var inserts = [custEmail];
-  mysql.pool.query(sql, inserts, function(error, results, fields){
-      if(error){
-          res.write(JSON.stringify(error));
-          res.end();
-      }
-      context.account = results[0];
-      complete();
-  });
-}
-//
 
 
 
@@ -68,7 +52,7 @@ function getDepartments(res, mysql, context, complete){
           res.end();
       }
       context.departments = results;
-      console.log(results);
+      //console.log(results);
       complete();
   });
 }
@@ -82,7 +66,19 @@ function getProducts(res, mysql, context, deptName, complete){
           res.end();
       }
       context.products = results;
-     
+
+      complete();
+  });
+}
+
+function getAllDepartments(res, mysql, context, complete){
+  mysql.pool.query("SELECT * FROM `Departments`", function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.departments = results;
+
       complete();
   });
 }
@@ -94,7 +90,7 @@ function getAllProducts(res, mysql, context, complete){
           res.end();
       }
       context.products = results;
-      
+
       complete();
   });
 }
@@ -105,7 +101,7 @@ function getAllOrders(res, mysql, context, complete){
           res.end();
       }
       context.orders = results;
-      
+
       complete();
   });
 }
@@ -117,131 +113,80 @@ function getAllCustomers(res, mysql, context, complete){
           res.end();
       }
       context.customers = results;
-      
+
       complete();
   });
 }
 
 
-
-function getAccount(res, mysql, context, custid, complete){
-  var sql = "SELECT `customer_id`, `name`, `email`, `street_address`, `city`, `state`,  `zipcode`, `phone` FROM `Customers` WHERE `email`= ?";
+function getCustId(res, mysql, context, custEmail, complete){
+  var sql = "SELECT `customer_id` FROM `Customers` WHERE `email` = ?";
   var inserts = [custEmail];
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
           res.end();
       }
-      context.account = results.customer_id;
+      context.custid = results[0].customer_id;
+
       complete();
+      // console.log(results);
+      // console.log(results[0]);
+      console.log(results[0].customer_id);
+      return results[0].customer_id;
   });
 }
 
-function getCustId(res, mysql, context, id, complete){
-        var sql = "SELECT `customer_id` FROM `Customers` WHERE `email`= ?";
-        var inserts = [custEmail];
-        mysql.pool.query(sql, inserts, function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            context.custId = results[0];
-            complete();
-        });
-        console.log(custId);
-    }
-    function addOrder(res, mysql, custId, orderDelvMeth, complete){
-        var sql = "INSERT INTO `Orders`(`customer_id`,`delivery_method`) VALUES (?, ?)";
-        var inserts = [custId, orderDelvMeth];
-        mysql.pool.query(sql, inserts, function(error, results, fields){
-            if(error){
-                res.write(JSON.stringify(error));
-                res.end();
-            }
-            //context.person = results[0];
-            complete();
-        });
-    }
-    app.post('/departments', function(req, res){
-      var callbackCount = 0;
-      let custID = req.body.custID;
-      let orderDelvMeth = req.body.orderDelvMeth;
-      var context = {};
-      var mysql = req.app.get('mysql');
-      getCustId(res, mysql, context, complete);
-      addOrder(res, mysql, custID, orderDelvMeth, complete);
-      function complete(){
-          callbackCount++;
-          if(callbackCount >= 2){
-              res.render('departments.handlebars', context);
-          }
-      }
+
+function addOrder(res, mysql, context, custEmail, orderDelvMeth, complete){
+    var date = new Date();
+    var sql = "INSERT INTO `Orders`(`customer_id`, `order_date`) VALUES ((SELECT `customer_id` FROM `Customers` WHERE `email`= ?), ?)";
+    var inserts = [custEmail, date];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          context.message = "error, please register with us first!";
+        }else{
+          context.message = "order created";
+        }
+
+        complete();
     });
 
 
+}
 
 
-    function getCustId(res, mysql, context, custEmail, complete){
-      console.log("in customer id ");
-      var sql = "SELECT `customer_id` FROM `Customers` WHERE `email`= ?";
-      var inserts = [custEmail];
-      mysql.pool.query(sql, inserts, function(error, results, fields){
-          if(error){
-              res.write(JSON.stringify(error));
-              res.end();
-          }
-          context.custId = results[0];
-          complete();
-      });
-      console.log(custId);
-      console.log("in customer id ");
+app.post('/departments', function(req, res){
+
+  var callbackCount = 0;
+  let custEmail = req.body.custEmail;
+  let orderDelvMeth = req.body.orderDelvMeth;
+  var context = {};
+  var mysql = req.app.get('mysql');
+
+  addOrder(res, mysql, context, custEmail, orderDelvMeth, complete);
+  getDepartments(res, mysql, context, complete);
+
+  function complete(){
+      callbackCount++;
+      if(callbackCount >= 2){
+          res.render('departments.handlebars', context);
+      }
   }
-  function addOrder(res, mysql, context, custId, orderDelvMeth, complete){
-      var sql = "INSERT INTO `Orders`(`customer_id`,`delivery_method`) VALUES (?, ?)";
-      var inserts = [custId, orderDelvMeth];
-      mysql.pool.query(sql, inserts, function(error, results, fields){
-          if(error){
-              res.write(JSON.stringify(error));
-              res.end();
-          }
-          //context.person = results[0];
-          complete();
-      });
-  }
-  app.post('/departments', function(req, res){
-    console.log("in app post departments");
-    var callbackCount = 0;
-    let custEmail = req.body.custEmail;
-    let orderDelvMeth = req.body.orderDelvMeth;
-    var context = {};
-    var mysql = req.app.get('mysql');
-    getCustId(res, mysql, context, custEmail,  complete);
-    addOrder(res, mysql, context, custID, orderDelvMeth, complete);
-    function complete(){
-        callbackCount++;
-        if(callbackCount >= 2){
-            res.render('departments.handlebars', context);
-        }
-    }
-    console.log("in app post departments");
-  });
+});
 
 
 app.get('/departments', function(req, res){
-  // var callbackCount = 0;
   var context = {};
   //context.jsscripts = ["squishies.js"];
   var mysql = req.app.get('mysql');
   getDepartments(res, mysql, context, complete);
-  
+
   function complete(){
-      // callbackCount++;
-      // if(callbackCount >= 2){
-      //     res.render('departments.handlebars', context);
-      // }
+
     res.render('departments.handlebars', context);
   }
-  console.log("i'm here");
+
 });
 
 app.get('/departments/:departmentName', function(req , res){
@@ -257,7 +202,6 @@ app.get('/departments/:departmentName', function(req , res){
       if(callbackCount >= 2){
           res.render('products.handlebars', context);
       }
-      //res.render('products.handlebars', {context});
   }
 });
 
@@ -278,26 +222,87 @@ app.get('/departments/:departmentName', function(req , res){
 
 //for cookies session?
 
-app.get('/account', function(req, res){
+function getCustomer(res, mysql, context, custEmail, complete){
+  var sql = "SELECT * FROM `Customers` WHERE `email` = ?";
+  var inserts = [custEmail];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+
+      context.custInfo = results[0];
+      //context.custid = results[0].customer_id;
+
+      complete();
+
+  });
+}
+
+//SELECT Products.name, `detail_id`, Orders.order_id, OrderDetails.product_id, `quantity`, `discount`, `unit_price`, `subtotal`, `customer_id`, `order_status`, `order_date`,`delivery_method`,`order_total`FROM `Orders` JOIN `OrderDetails` ON OrderDetails.order_id = Orders.order_id JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `customer_id`=?
+
+function getOrders(res, mysql, context, customer_id, complete) {
+  var sql = "SELECT * FROM `Orders` WHERE `customer_id` = ?";
+  var inserts = [customer_id];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+
+      context.custOrders = results;
+      console.log(results);
+      complete();
+  });
+}
+
+// function getDetails(res, mysql, context, order_id, complete) {
+//   var sql = "SELECT * FROM `Order_Details` WHERE `order_id` = ?";
+//   var inserts = [order_id];
+//
+//   mysql.pool.query(sql, inserts, function(error, results, fields){
+//       if(error){
+//           res.write(JSON.stringify(error));
+//           res.end();
+//       }
+//
+//       context.details = results;
+//       complete();
+//   });
+// }
+
+app.post('/account', function(req, res){
   var callbackCount = 0;
-  let custID = req.params.custID
+  let custEmail = req.body.custEmail;
   var context = {};
   var mysql = req.app.get('mysql');
-  getCustId(res, mysql, context, complete);
-  getAccount(res, mysql, context, custID, complete);
+
+  getCustomer(res, mysql, context, custEmail, complete);
+
   function complete(){
-  //     callbackCount++;
-  //     if(callbackCount >= 2){
-          res.render('account.handlebars', context);
+      callbackCount++;
+      if(callbackCount == 1){
+        let customer_id = context.custInfo.customer_id;
+        getOrders(res, mysql, context, customer_id, complete);
+      }
+      // if(callbackCount == 2){
+      //   let order_id = context.custOrders.order_id;
+      //   getDetails(res, mysql, context, order_id, complete)
       // }
+      // if(context.custOrders.order_id==NULL){
+      //   if(callbackCount >= 2){
+      //     //context.customerInfo = results;
+      //     res.render('account.handlebars', context);
+      //   }
+      // }
+      if(callbackCount >= 2){
+        //context.customerInfo = results;
+        res.render('account.handlebars', context);
+      }
   }
 });
-
-
-
-
-
-
 
 
 
@@ -314,21 +319,121 @@ app.get('/admin', function(req,res){
   var callbackCount=0;
   //context.jsscripts = ["squishies.js"];
   var mysql = req.app.get('mysql');
- 
+
+  getAllDepartments(res, mysql, context, complete);
   getAllProducts(res, mysql, context, complete);
   getAllCustomers(res, mysql, context, complete);
   getAllOrders(res, mysql, context, complete);
-  
+
   function complete(){
       callbackCount++;
-      if(callbackCount >= 3){
+      if(callbackCount >= 4){
         res.render('admin', context);
       }
-     
+
   }
-  // res.render('admin', context);
-  
+
 });
+
+function addDepartment(res, mysql, context, dept_name, complete){
+    var sql = "INSERT INTO `Departments` (`name`) VALUES (?)";
+    var inserts = [dept_name];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        complete();
+    });
+}
+
+function deleteCustomer(res, mysql, context, customer_id, complete){
+  var sql = "DELETE FROM `Customers` WHERE `customer_id` = ?";
+  var inserts = [customer_id];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      complete();
+  });
+}
+
+function deleteOrder(res, mysql, context, order_id, complete){
+  var sql = "DELETE FROM `Orders` WHERE `order_id` = ?";
+  var inserts = [order_id];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      complete();
+  });
+}
+
+function deleteProduct(res, mysql, context, product_id, complete){
+  var sql = "DELETE FROM `Products` WHERE `product_id` = ?";
+  var inserts = [product_id];
+  //console.log("order id is: ", order_id);
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      complete();
+  });
+}
+
+
+app.post('/admin', function(req,res){
+
+  var context = {};
+  var callbackCount=0;
+  //context.jsscripts = ["squishies.js"];
+  var mysql = req.app.get('mysql');
+  if (req.body.customer_id) {
+    let customer_id = req.body.customer_id;
+    complete();
+    deleteCustomer(res, mysql, context, customer_id, complete);
+  }
+  if (req.body.order_id) {
+    let order_id = req.body.order_id;
+    complete();
+    deleteOrder(res, mysql, context, order_id, complete);
+  }
+  if (req.body.product_id) {
+    let product_id = req.body.product_id;
+    complete();
+    deleteProduct(res, mysql, context, product_id, complete);
+  }
+  if (req.body.dept_name) {
+    let dept_name = req.body.dept_name;
+    complete();
+    addDepartment(res, mysql, context, dept_name, complete);
+  }
+
+  //deleteCustomer(res, mysql, context, customer_id, complete);
+  getAllDepartments(res, mysql, context, complete);
+  getAllProducts(res, mysql, context, complete);
+  getAllCustomers(res, mysql, context, complete);
+  getAllOrders(res, mysql, context, complete);
+
+  function complete(){
+      callbackCount++;
+      if(callbackCount >= 6){
+
+        res.render('admin', context);
+      }
+
+  }
+
+});
+
+
+
+
+
 
 
 app.use(function(req,res){

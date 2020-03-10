@@ -20,21 +20,19 @@
         <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
     </ul>
     <div>
-      
-      <form action = "/departments" method = "post"> 
-        <fieldset>
-            <th> Log in to create an order, Email: </th>
-            <th class="emailInputBox"> <input class="emailInput" type="text" name="custEmail"></th>
-            <button type="submit" form="form1" class="add" value="LogIn">Login</button>
-            <div> 
-        Select Order Method:<br>
-        <input type="radio" name="orderMethod" value="1">Delivery<br>
-        <input type="radio" name="orderMethod" value="2">Pickup<br> 
-      </div>
-      <br>
-        </fieldset>
-        
-    </form>
+
+    <form action="/departments" method="post">
+      <fieldset>
+        <th> Log in to create an order, Email: </th>
+        <th class="emailInputBox" id="emailInput"> <input class="emailInput" type="text" name="custEmail"></th>
+
+        <div>
+
+    </div>
+    <br>
+      </fieldset>
+      <p>{{message}}</p>
+  </form>
 
   </div>
   <br>

@@ -1,0 +1,114 @@
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Butternut Squishies Grocery Store</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/account.css">
+
+    <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
+
+  </head>
+  <body>
+
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+    <li class="registerButtonSection" ><a class="register" href="register">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="/">Home</a></li>
+        <li><a class="tab" href="departments">Departments</a></li>
+        <li><a class="active tab" href="accounts">Account</a></li>
+        <li><a class="tab" href="admin">Admin</a></li>
+        <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
+    </ul>
+
+    <div>
+        <h1 class="title">Account Information</h1>
+      </div>
+        <form class="customerFormUpdate" method="post">
+          <fieldset>
+            <input type="hidden" name="customer_id" value={{customer_id}}>
+            <div>Name: {{custInfo.name}}</div> <input type="text" name="firstname">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+          <fieldset>
+            <div>Email:{{custInfo.email}}</div>
+            <input type="text" name="email">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+          <fieldset>
+            <div>Street{{custInfo.street_addres}}s</div>
+            <input type="text" name="street">
+            <input type ="submit" value="Update">
+          </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+        <fieldset>
+            <div>City: {{custInfo.city}}</div>
+            <input type="text" name="city">
+            <input type ="submit" value="Update">
+        </fieldset>
+        </form>
+        <form class="customerFormUpdate">
+        <fieldset>
+            <div>State: {{custInfo.state}}</div>
+            <input type="text" name="state">
+            <input type ="submit" value="Update">
+        </fieldset>
+        <fieldset>
+            <div>ZipCode: {{custInfo.zipcode}}</div>
+            <input type="text" name="zip">
+            <input type ="submit" value="Update">
+        </fieldset>
+         <fieldset>
+            <div>Phone: {{custInfo.phone}}</div>
+            <input type="text" name="phone">
+            <input type ="submit" value="Update">
+        </fieldset>
+        </form>
+        <div>
+          <h2 class="title"> Orders </h2>
+    <table class ="products-table">
+      <thead>
+        <tr>
+          <th class ="thead">OrderID </th>
+          <th class ="thead">Order Status </th>
+          <th class ="thead">Order Date </th>
+          <th class ="thead">Received Date</th>
+          <th class ="thead">Delivery Method</th>
+          <th class ="thead">Note</th>
+          <th class ="thead">Shipped-Date</th>
+          <th class ="thead">Order Total</th>
+          <th class ="thead">Details </th>
+        </tr>
+      </thead>
+      {{#each custOrders}}
+        <tr>
+          <td class ="itemsbox">{{order_id}}</td>
+          <td class ="thead">{{order_status}}</td>
+          <td class ="thead">{{order_date}}</td>
+          <td class ="thead">{{received_date}}</td>
+          <td class ="thead">{{delivery_method}}</td>
+          <td class ="thead">{{note}}</td>
+          <td class ="thead">{{shipped_date}}</td>
+          <td class ="thead">{{order_total}}</td>
+
+          <td class ="thead">
+            <form action="/admin" method="post">
+            <input type="hidden" name="order_id" value={{order_id}}>
+              <input class="button" type="submit" value="details">
+            </form>
+          </td>
+        </tr>
+
+      {{/each}}
+</table>
+<br>
+      </div>
+
+
+  </body>
+</html>
