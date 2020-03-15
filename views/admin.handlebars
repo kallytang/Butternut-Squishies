@@ -25,11 +25,12 @@
     <h2>Add New Department</h2>
       <fieldset>
         <div><label > Department Name:
-          <input type ="text" max="254" name="departmentName" id="newDepartment">
+          <input type ="text" max="254" name="dept_name" id="newDepartment">
         </label></div>
         <input type="submit" value="add department" id="addDepartment">
       </fieldset>
     </form>
+
 
     <br>
     <table>
@@ -57,7 +58,7 @@
         <div>
         Select Department:<br>
          {{#each departments}}
-        <input type="radio" name="dept_name" value={{department_id}}>{{name}}<br>
+        <input type="radio" name="dept_id" value={{department_id}}>{{name}}<br>
           {{/each}}
 
         </div>
@@ -97,9 +98,11 @@
           <td>{{limit}}</td>
           <td>{{image_path}} </td>
           <td>
-            <form>
-              <input type="button" value="update">
+            <form action="/updateProducts" method="get">
+              <input type="hidden" name= "prodID" value={{product_id}}>
+              <input type="submit" value="update">
             </form>
+
           </td>
           <td>
             <form action="/admin" method="post">

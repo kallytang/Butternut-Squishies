@@ -21,26 +21,26 @@
 
 
      <div id ="subBox">
-        <form class="signForm">
+        <form action="/register" method="post" class="signForm">
             <fieldset class ="loginBox">
             <legend>New Customer Sign Up:</legend>
                 <div class ="inputInfo">
-                    *Name: <input type ="text"  max="254" name= "nameInput" id= "nameInput"><br>
+                    *Name: <input type ="text"  max="254" name= "custName" id= "nameInput"><br>
                 </div>
                 <div class ="inputInfo">
-                    *Email: <input type = "text"  max="254" name = "emailInput" id="emailInput"><br>
+                    *Email: <input type = "text"  max="254" name = "custEmail" id="emailInput"><br>
                 </div>
                 <div class ="inputInfo">
-                    *Address: <input type = "text"  max="254" name = "addressInput" id="addressInput"><br>
+                    *Address: <input type = "text"  max="254" name = "custAddr" id="addressInput"><br>
                 </div>
                 <div class ="inputInfo">
-                    *City: <input type = "text"  max="254" name = "cityInput" id="cityInput"><br>
+                    *City: <input type = "text"  max="254" name = "custCity" id="cityInput"><br>
                 </div>
                 <div class ="inputInfo">
-                    *Zip: <input type = "text"  max="254" name = "zipInput" id="zipInput"><br>
+                    *Zip: <input type = "text"  max="254" name = "custZip" id="zipInput"><br>
                 </div>
                 <div class ="inputInfo">
-                    Phone: <input type = "text"  max="254" name = "phoneInput" id="phoneInput"><br>
+                    Phone: <input type = "text"  max="254" name = "custPhone" id="phoneInput"><br>
                 </div>
                 <div class = "submitButton">
 
@@ -50,6 +50,8 @@
         <form>
     </div>
 
+    <br>
+    <p>{{message}}</p>
 
     <div class="intro">
 
