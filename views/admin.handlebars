@@ -21,7 +21,7 @@
         <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
     </ul>
 
-    <form>
+    <form action="/admin" method="post">
     <h2>Add New Department</h2>
       <fieldset>
         <div><label > Department Name:
@@ -44,24 +44,23 @@
       {{/each}}
     </table>
 
-     <form>
+    <form action="/admin" method="post">
      <h2>Add New Product</h2>
       <fieldset>
         <div><label >Product Name:
-          <input type ="text" max="254" name="productName" id="newProduct">
+          <input type ="text" max="254" name="prod_name" id="newProduct">
         </label>
         <label>
-        Price:<input type ="text"  max="254" name= "nameInput" id= "nameInput"><br>
+        Price <input type="number" min="0.00" step="0.01" max="1000.00" name="price" id="priceInput"> <br>
         </label>
         </div>
         <div>
         Select Department:<br>
-        <input type="radio" name="department" value="produce">Produce<br>
-        <input type="radio" name="department" value="dryGoods">Dry Goods<br>
-        <input type="radio" name="department" value="beverages">Beverages<br>
-        <input type="radio" name="department" value="bakery">Bakery<br>
-        </div>
+         {{#each departments}}
+        <input type="radio" name="dept_name" value={{department_id}}>{{name}}<br>
+          {{/each}}
 
+        </div>
         <input type="submit" value="add product" id="addProduct">
       </fieldset>
     </form>
@@ -79,9 +78,9 @@
           <th> Price </th>
           <th> Quantity/Stock </th>
           <th> Sale </th>
-          <th>Limit</th>
+          <th> Limit</th>
 
-          <th> Image Path</th>
+          <th> Image Path </th>
           <th> Update </th>
           <th> Delete </th>
         </tr>

@@ -71,6 +71,21 @@ function getProducts(res, mysql, context, deptName, complete){
   });
 }
 
+function SearchProducts(res, mysql, context, prodName, complete){
+  var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `name` LIKE ?";
+  var inserts = "%" + [prodName] + "%";
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.products = results;
+
+      complete();
+
+  });
+}
+
 function getAllDepartments(res, mysql, context, complete){
   mysql.pool.query("SELECT * FROM `Departments`", function(error, results, fields){
       if(error){
@@ -94,6 +109,7 @@ function getAllProducts(res, mysql, context, complete){
       complete();
   });
 }
+
 function getAllOrders(res, mysql, context, complete){
   mysql.pool.query("SELECT * FROM `Orders`", function(error, results, fields){
       if(error){
@@ -204,6 +220,19 @@ app.get('/departments/:departmentName', function(req , res){
       }
   }
 });
+
+app.post('/product', function(req, res){
+  let prodName = req.body.prodName;
+  var context = {};
+  var mysql = req.app.get('mysql');
+
+  SearchProducts(res, mysql, context, prodName, complete);
+
+  function complete(){
+      res.render('product.handlebars', context);
+  }
+});
+
 
 // app.get('/account', function(req, res){
 //   var callbackCount = 0;
@@ -385,6 +414,22 @@ function deleteProduct(res, mysql, context, product_id, complete){
   });
 }
 
+function addProduct(res, mysql, context, prod_name, dept_name, price, complete){
+    var sql = "INSERT INTO `Products` (`name`, `department_id`, `price`) VALUES (?, (SELECT `department_id` FROM `Departments` WHERE `name`=?), ?)";
+    var inserts = [prod_name, dept_name, price];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        console.log(prod_name);
+        console.log(dept_name);
+        console.log(dept_name.name);
+        console.log(price);
+        complete();
+    });
+}
+
 
 app.post('/admin', function(req,res){
 
@@ -412,6 +457,13 @@ app.post('/admin', function(req,res){
     complete();
     addDepartment(res, mysql, context, dept_name, complete);
   }
+  if (req.body.prod_name) {
+    let prod_name = req.body.prod_name;
+    let dept_name = req.body.dept_name;
+    let price = req.body.price;
+    complete();
+    addProduct(res, mysql, context, prod_name, dept_name, price, complete)
+  }
 
   //deleteCustomer(res, mysql, context, customer_id, complete);
   getAllDepartments(res, mysql, context, complete);
@@ -421,7 +473,7 @@ app.post('/admin', function(req,res){
 
   function complete(){
       callbackCount++;
-      if(callbackCount >= 6){
+      if(callbackCount >= 7){
 
         res.render('admin', context);
       }

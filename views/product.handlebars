@@ -1,0 +1,70 @@
+<html>
+  <head>
+
+    <meta charset="utf-8">
+    <title>Butternut Squishies Grocery Store</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/departments.css">
+    <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
+
+  </head>
+  <body>
+
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+        <li class="registerButtonSection" ><a class="register" href="/register">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="/">Home</a></li>
+        <li><a class="active tab" href="/departments">Departments</a></li>
+        <li><a class="tab" href="/accounts">Account</a></li>
+        <li><a class="tab" href="/admin">Admin</a></li>
+        <li><a class ="checkoutBox" href="/checkout">Check Out</a></li>
+    </ul>
+
+
+
+<table class="products-table">
+<tbody>
+<tr>
+ <th class="thead">Product Name:</th>
+ <th class="thead">Description:</th>
+ <th class="thead">Price:</th>
+ <th class="thead">Quantity:</th>
+ <th class="thead">Add to Cart</th>
+</tr>
+
+<br>
+<h2>Search Results</h2>
+<br>
+
+
+{{#each products}}
+  <tr>
+      <td class="itemsbox imagesec">
+          <p class="prodName">{{name}}</p>
+            <img class="prodImage" src={{image_path}}>
+      </td>
+      <td class="itemsbox description">
+      <p>{{description}}</p>
+      </td>
+      <td class="itemsbox priceInfo">
+      <p>{{price}}</p>
+      <p class="limit"></p>
+      <p></p>
+      </td>
+      <td class="itemsbox quantity">
+          <form method="post">
+          <input class="quantityBox" type="number" name="points" step="1">
+          </form>
+      </td>
+      <td class="itemsbox submitButton">
+          <button type="submit" form="form1" class="add" value="addToCart">Add to cart</button>
+      </td>
+    </tr>
+{{/each}}
+</tbody>
+</table>
+
+
+
+  </body>
+</html>
