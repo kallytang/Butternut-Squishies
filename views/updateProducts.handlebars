@@ -32,7 +32,7 @@
             <td><input type="text" max = "255" name="prodDesc" value ={{product.description}}></td>
             <td>
                 {{#each departments}}
-                <input type="radio" max = "255" name="deptID" value ={{product.department_id}}>{{product.name}}
+                <input type="radio" max = "255" name="deptID" value ={{{department_id}}}> {{{name}}}
                 {{/each}}
             </td>
             <td><input type="number" min="0.00" step= "0.01" max="1000.00" name="prodPrice" value ={{product.price}}></td>

@@ -477,21 +477,21 @@ app.get('/updateProducts/:prodID', function(req, res){
   var callbackCount = 0;
   var context = {};
   var mysql = req.app.get('mysql');
-  var prodID = req.params.prodID;
-  console.log(prodID);
+  var prodID;
+  // console.log(prodID);
 
+  prodID = req.params.prodID;
   getSelectedProduct(res, mysql, context, prodID, complete);
   getAllDepartments(res, mysql, context, complete);
+
 
   function complete(){
     callbackCount++;
     if(callbackCount == 1){
 
-      // prodID = req.params.prodID;
-      // console.log(prodID);
     }
-    if(callbackCount == 2){
-      //console.log(context);
+    if(callbackCount >= 2){
+      console.log(context);
       //let deptID = context.departments.department_id;
       //updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
       res.render('updateProducts.handlebars', context);
@@ -505,13 +505,15 @@ app.get('/updateProducts/:prodID', function(req, res){
 function getSelectedProduct(res, mysql, context, prodID, complete) {
   var sql = "SELECT * FROM `Products` WHERE `product_id`=?";
   var inserts = [prodID];
+  //console.log(prodID);
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
         res.write(JSON.stringify(error));
         res.end();
       }
-      console.log(context);
+      //console.log(results);
       context.product=results;
+      // console.log(context);
       complete();
   });
 }
