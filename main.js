@@ -53,7 +53,7 @@ function getDepartments(res, mysql, context, complete){
 
 // function to get products for each department
 function getProducts(res, mysql, context, deptName, complete){
-  var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `department_id`=(SELECT `department_id` FROM `Departments` WHERE `name`=?)";
+  var sql = "SELECT `product_id`,`name`, `image_path`, `description`, `price` FROM `Products` WHERE `department_id`=(SELECT `department_id` FROM `Departments` WHERE `name`=?)";
   var inserts = [deptName];
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
@@ -668,6 +668,81 @@ app.post('/register', function(req, res){
 
     function complete(){
         res.render('register.handlebars', context);
+
+    }
+});
+
+function getOrder(res, mysql, context, complete){
+    var sql = "SELECT `order_id` FROM `Orders` WHERE `order_status` = ?";
+    var inserts = [1];
+
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+            res.write(JSON.stringify(error));
+            res.end();
+        }
+        context.orderInfo = results[0];
+
+        complete();
+
+    });
+}
+
+
+function addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal, complete){
+    var sql = "INSERT INTO `OrderDetails`(`order_id`, `product_id`, `quantity`, `unit_price`, `subtotal`) VALUES (?, ?, ?, ?, ?)";
+    var inserts = [orderID, prodID, quantity, price, subtotal];
+    mysql.pool.query(sql, inserts, function(error, results, fields){
+        if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+        }
+        complete();
+    });
+}
+
+app.post('/addCart', function(req, res){
+    var callbackCount = 0;
+
+    let prodID = req.body.prodID;
+    let quantity = req.body.quantity;
+    let price = req.body.price;
+    let subtotal = quantity * price;
+    console.log(prodID);
+
+    var context = {};
+    var mysql = req.app.get('mysql');
+
+    getOrder(res, mysql, context, complete);
+    function complete(){
+      callbackCount++;
+      if (callbackCount == 1) {
+          let orderID = context.orderInfo.order_id;
+          addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal, complete);
+      }
+
+      if (callbackCount >= 2) {
+            res.render('departments.handlebars', context);
+
+      }
+    }
+});
+
+app.post('/checkout', function(req, res){
+    let custName = req.body.custName;
+    let custEmail = req.body.custEmail;
+    let custAddr = req.body.custAddr;
+    let custCity = req.body.custCity;
+    let custZip = req.body.custZip;
+    let custPhone = req.body.custPhone;
+
+    var context = {};
+    var mysql = req.app.get('mysql');
+
+    getDetails();
+
+    function complete(){
+        res.render('checkout.handlebars', context);
 
     }
 });

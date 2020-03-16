@@ -48,7 +48,10 @@
 
 
 {{#each products}}
+{{product_id}}
+  <form action="/addCart" method="post">
   <tr>
+      <input type="hidden" name="prodID" value="{{product_id}}">
       <td class="itemsbox imagesec">
           <p class="prodName">{{name}}</p>
             <img class="prodImage" src={{image_path}}>
@@ -57,19 +60,21 @@
       <p>{{description}}</p>
       </td>
       <td class="itemsbox priceInfo">
-      <p>{{price}}</p>
+      <p>{{price}}<input type="hidden" name="price" value="{{price}}">
+      </p>
       <p class="limit"></p>
       <p></p>
       </td>
       <td class="itemsbox quantity">
-          <form method="post">
-          <input class="quantityBox" type="number" name="points" step="1">
-          </form>
+
+          <input class="quantityBox" min="0" type="number" name="quantity" step="1">
       </td>
       <td class="itemsbox submitButton">
           <button type="submit" form="form1" class="add" value="addToCart">Add to cart</button>
       </td>
     </tr>
+  </form>
+
 {{/each}}
 </tbody>
 </table>
