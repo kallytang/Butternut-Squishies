@@ -99,7 +99,7 @@
           <td>{{image_path}} </td>
           <td>
 
-              <a text-decoration="none" style="text-decoration:none" href="/updateProducts/{{product_id}}" name= "prodID">Update</a> 
+              <a text-decoration="none" style="text-decoration:none" href="/updateProducts/{{product_id}}" name= "prodID">Update</a>
               <input type ="hidden" value ={{product_id}}>
 
             </form>
@@ -146,9 +146,8 @@
           <td>{{shipped_date}}</td>
           <td>{{order_total}}</td>
           <td>
-            <form>
-              <input type="button" value="update">
-            </form>
+            <a text-decoration="none" style="text-decoration:none" href="/updateOrders/{{order_id}}" name= "orderID">Update</a>
+            <input type ="hidden" value ={{order_id}}>
           </td>
           <td>
             <form action="/admin" method="post">

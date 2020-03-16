@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Butternut Squishies Grocery Store</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/admin.css">
+    <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
+  </head>
+  <body>
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+      <li class="registerButtonSection" ><a class="register" href="register">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="/">Home</a></li>
+        <li><a class="tab" href="/departments">Departments</a></li>
+        <li><a class="tab" href="/accounts">Account</a></li>
+        <li><a class="tab" href="/admin">Admin</a></li>
+        <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
+    </ul>
+
+
+
+
+      <h2 class="title1">Update/Delete Orders</h2>
+    <table>
+      <caption>Orders<caption>
+      <thead>
+        <tr>
+          <th>OrderID </th>
+          <th>Order Status </th>
+          <th>Order Date </th>
+          <th>Received Date</th>
+          <th>Delivery Method</th>
+          <th>Note</th>
+          <th>Shipped-Date</th>
+          <th>Order Total</th>
+          <th>Update </th>
+        </tr>
+      </thead>
+      <form action="/updateOrders" method="post">
+        <tr>
+            <td>{{order.order_id}}</td>
+            <td>
+              <input min="0" max="6" type="number" name="status" value="{{order.order_status}}">
+            </td>
+
+            <td>{{order.order_date}}</td>
+
+                <td><input  type="date" name = "recDate" value ="{{order.received_date}}"></td>
+
+            <td>{{order.delivery_method}}</td>
+            <td>{{order.note}}</td>
+            <td><input type="datetime" name="shipDate" value="{{order.shipped_date}}"></td>
+            <td>{{order.order_total}}</td>
+            <td>
+
+                <input type="hidden" name="orderID" value="{{order.order_id}}"">
+                <input class="button" type="submit" value="update">
+
+            </td>
+        </tr>
+      </form>
+    <br>
+    {{message}}
+    <br>
+    </table>
+
+  </body>
+</html>

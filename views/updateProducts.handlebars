@@ -8,6 +8,18 @@
     <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
   </head>
   <body>
+
+    <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
+      <li class="registerButtonSection" ><a class="register" href="register">Register</a></li>
+    <ul class="nav">
+        <li><a class="tab" href="/">Home</a></li>
+        <li><a class="tab" href="/departments">Departments</a></li>
+        <li><a class="tab" href="/accounts">Account</a></li>
+        <li><a class="tab" href="/admin">Admin</a></li>
+        <li><a class ="checkoutBox" href="checkout">Check Out</a></li>
+    </ul>
+
+
     <h2>Update Products</h2>
 
  <table>
@@ -25,31 +37,35 @@
           <th> Update </th>
         </tr>
       </thead>
-
+        <form action="/updateProducts" method="post">
         <tr>
             <td>{{product.product_id}}</td>
-            <td><input type="text" max = "255" name="prodName" value ={{product.name}}></td>
-            <td><input type="text" max = "255" name="prodDesc" value ={{product.description}}></td>
+            <td><input type="text" max = "255" name="prodName" value ="{{product.name}}"></td>
+            <td><input type="text" max = "255" name="prodDesc" value ="{{product.description}}"></td>
             <td>
                 {{#each departments}}
                 <input type="radio" max = "255" name="deptID" value ={{{department_id}}}> {{{name}}}
+                <br>
                 {{/each}}
             </td>
-            <td><input type="number" min="0.00" step= "0.01" max="1000.00" name="prodPrice" value ={{product.price}}></td>
-            <td><input type="number" min="0" max = "10000" name="prodStock" value ={{product.stock}}></td>
+            <td><input type="number" min="0.00" step= "0.01" max="1000.00" name="prodPrice" value ="{{product.price}}"></td>
+            <td><input type="number" min="0" max = "10000" name="prodStock" value ="{{product.stock}}"></td>
             <td>
                 <input type="radio" max = "255" name="prodSale" value ="0" >Not on Sale <br>
                 <input type="radio" max = "255" name="prodSale" value ="1">Sale <br>
             </td>
-          <td><input type="text" max = "255" name="prodImage" value ={{product.image_path}} ></td>
+          <td><input type="text" max = "255" name="prodImage" value ="{{product.image_path}}" ></td>
             <td>
-                <form action="/updateProducts" method="post">
-                <input type="hidden" name= "prodID" value={{product.product_id}}>
+
+                <input type="hidden" name= "prodID" value="{{product.product_id}}">
                 <input class="button" type="submit" value="Update">
-                </form>
+
             </td>
         </tr>
-
+      </form>
+      <br>
+      {{message}}
+      <br>
     </table>
   </body>
 </html>

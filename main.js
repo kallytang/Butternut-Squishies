@@ -498,8 +498,6 @@ app.get('/updateProducts/:prodID', function(req, res){
     }
   }
 
-
-  res.render('updateProducts.handlebars', context);
 });
 
 function getSelectedProduct(res, mysql, context, prodID, complete) {
@@ -512,8 +510,8 @@ function getSelectedProduct(res, mysql, context, prodID, complete) {
         res.end();
       }
       //console.log(results);
-      context.product=results;
-      // console.log(context);
+      context.product=results[0];
+      //console.log(context.product);
       complete();
   });
 }
@@ -527,53 +525,15 @@ function updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPri
         res.write(JSON.stringify(error));
         res.end();
       }
+      context.message = "Updated successfully!";
       complete();
   });
 }
 
-// app.post('/updateProducts', function(req, res){
-//     callbackCount = 0;
-//
-//     let deptID = req.body.deptID;
-//     let prodName = req.body.prodName;
-//     let prodImage = req.body.prodImage;
-//     let prodPrice = req.body.prodPrice;
-//     let prodDesc = req.body.prodDesc;
-//     let prodSale = req.body.prodSale;
-//     let prodStock = req.body.prodStock;
-//     let prodID = req.body.prodID;
-//
-//     var context = {};
-//     var mysql = req.app.get('mysql');
-//
-//     getDepartments(res, mysql, context, complete);
-//
-//     function complete(){
-//       callbackCount++;
-//       if(callbackCount == 1){
-//         //let deptID = context.departments.department_id;
-//         updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
-//         res.render('admin.handlebars', context);
-//       }
-//     }
-// });
+app.post('/updateProducts', function(req, res){
+    //callbackCount = 0;
 
-
-function updateOrders(res, mysql, context, status, recDate, shipDate, orderID, complete) {
-  var sql = "UPDATE `Orders` SET `order_status`=?,`received_date`=?,`shipped_date`=? WHERE `order_id`=?";
-  var inserts = [];
-  mysql.pool.query(sql, inserts, function(error, results, fields){
-      if(error){
-        res.write(JSON.stringify(error));
-        res.end();
-      }
-      complete();
-  });
-}
-
-app.post('/updateOrders', function(req, res){
-    callbackCount = 0;
-
+    let deptID = req.body.deptID;
     let prodName = req.body.prodName;
     let prodImage = req.body.prodImage;
     let prodPrice = req.body.prodPrice;
@@ -582,20 +542,101 @@ app.post('/updateOrders', function(req, res){
     let prodStock = req.body.prodStock;
     let prodID = req.body.prodID;
 
+    console.log(prodName);
+    console.log(prodPrice);
+
     var context = {};
     var mysql = req.app.get('mysql');
 
-
-
+    //getDepartments(res, mysql, context, complete);
+    updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
     function complete(){
+      //callbackCount++;
+      //if(callbackCount == 1){
+        //let deptID = context.departments.department_id;
 
-
-        res.render('admin.handlebars', context);
-
+        res.render('updateProducts.handlebars', context);
+      //}
     }
 });
 
 
+app.get('/updateOrders/:orderID', function(req, res){
+  //var callbackCount = 0;
+  var context = {};
+  var mysql = req.app.get('mysql');
+  var orderID;
+  // console.log(prodID);
+
+  orderID = req.params.orderID;
+  getSelectedOrder(res, mysql, context, orderID, complete);
+
+  function complete(){
+    // callbackCount++;
+    // if(callbackCount == 1){
+    //
+    // }
+    // if(callbackCount >= 2){
+      console.log(context);
+      //let deptID = context.departments.department_id;
+      //updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
+      res.render('updateOrders.handlebars', context);
+    // }
+  }
+
+});
+
+function getSelectedOrder(res, mysql, context, orderID, complete) {
+  var sql = "SELECT * FROM `Orders` WHERE `order_id`=?";
+  var inserts = [orderID];
+  //console.log(prodID);
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+        res.write(JSON.stringify(error));
+        res.end();
+      }
+      //console.log(results);
+      context.order=results[0];
+      //console.log(context.product);
+      complete();
+  });
+}
+
+
+function updateOrder(res, mysql, context, status, recDate, shipDate, orderID, complete) {
+  var sql = "UPDATE `Orders` SET `order_status`=?, `received_date`=?, `shipped_date`=? WHERE `order_id`=?";
+  var inserts = [status, recDate, shipDate, orderID];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+        res.write(JSON.stringify(error));
+        res.end();
+      }
+      context.message = "Updated successfully!";
+      complete();
+  });
+}
+
+app.post('/updateOrders', function(req, res){
+    //callbackCount = 0;
+    let orderID = req.body.orderID;
+    let status = req.body.status;
+    let recDate = req.body.recDate;
+    let shipDate = req.body.shipDate;
+
+    var context = {};
+    var mysql = req.app.get('mysql');
+
+    //getDepartments(res, mysql, context, complete);
+    updateOrder(res, mysql, context, status, recDate, shipDate, orderID, complete)
+    function complete(){
+      //callbackCount++;
+      //if(callbackCount == 1){
+        //let deptID = context.departments.department_id;
+
+        res.render('updateOrders.handlebars', context);
+      //}
+    }
+});
 
 
 
