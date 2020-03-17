@@ -68,7 +68,7 @@ function getProducts(res, mysql, context, deptName, complete){
 
 // function to get a product based on a user inputted product name in search bar
 function searchProducts(res, mysql, context, prodName, complete){
-  var sql = "SELECT `name`, `image_path`, `description`, `price` FROM `Products` WHERE `name` LIKE ?";
+  var sql = "SELECT `product_id`,`name`, `image_path`, `description`, `price` FROM `Products` WHERE `name` LIKE ?";
   var inserts = "%" + [prodName] + "%";
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
@@ -282,20 +282,6 @@ function getOrders(res, mysql, context, customer_id, complete) {
   });
 }
 
-// function getDetails(res, mysql, context, order_id, complete) {
-//   var sql = "SELECT * FROM `Order_Details` WHERE `order_id` = ?";
-//   var inserts = [order_id];
-//
-//   mysql.pool.query(sql, inserts, function(error, results, fields){
-//       if(error){
-//           res.write(JSON.stringify(error));
-//           res.end();
-//       }
-//
-//       context.details = results;
-//       complete();
-//   });
-// }
 
 // route for accounts page that calls getCustomer and getOrders
 app.post('/account', function(req, res){
@@ -728,18 +714,28 @@ app.post('/addCart', function(req, res){
     }
 });
 
+function getDetails(res, mysql, context, orderID, complete) {
+  var sql = "SELECT * FROM `Order_Details` WHERE `order_id` = ?";
+  var inserts = [orderID];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+
+      context.details = results;
+      complete();
+  });
+}
+
 app.post('/checkout', function(req, res){
-    let custName = req.body.custName;
-    let custEmail = req.body.custEmail;
-    let custAddr = req.body.custAddr;
-    let custCity = req.body.custCity;
-    let custZip = req.body.custZip;
-    let custPhone = req.body.custPhone;
+    let orderID = req.body.orderID;
 
     var context = {};
     var mysql = req.app.get('mysql');
 
-    getDetails();
+    getDetails(res, mysql, context, orderID, complete);
 
     function complete(){
         res.render('checkout.handlebars', context);
