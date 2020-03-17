@@ -2,7 +2,7 @@
     Uses express, dbcon for database connection, body parser to parse form data
     handlebars for HTML templates
 */
-
+var cookieSession = require('cookie-session')
 
 var express = require('express');
 
@@ -12,6 +12,13 @@ var bodyParser = require('body-parser');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
+app.use(cookieSession({
+  name: 'session',
+  cid: null,
+  oid: null,
+  oStatus:null,
+  keys: ["key", "key"]
+}))
 
 app.engine('handlebars', handlebars.engine);
 app.use(bodyParser.urlencoded({extended:true}));
@@ -23,8 +30,53 @@ app.set('mysql', mysql);
 
 // route for static home page
 app.get('/', function(req,res){
+  
   var context = {};
-  res.render('home', context);
+  if(req.session.cid ==null){
+    res.render('homeLogin', context);
+  }else{
+    
+    res.render('home', context);
+  }
+  
+});
+
+// route for static home page
+app.post('/', function(req,res){
+  var context = {};
+ var callbackCount=0;
+  var custEmail = req.body.custEmail;
+  getCustId(res, mysql, context, custEmail, complete);
+
+  
+  // if(req.session.cid ==null){
+  //   res.render('homeLogin', context);
+  // }else{
+    
+  //   res.render('home', context);
+  // }
+  function complete(){
+    callbackCount++;
+    if(context.custid){
+      req.session.cid = context.custid.customer_id;
+      if(callbackCount == 1){
+        // res.render('departments.handlebars', context);
+        console.log(req.session.cid);
+        res.render('home', context);
+      }
+     
+    }else{
+      if(callbackCount == 1){
+        // res.render('departments.handlebars', context);
+        res.render('homeLogin', context);
+      }
+    }
+    
+    
+  }
+  
+
+  
 });
 
 // route for static accounts page
@@ -140,13 +192,22 @@ function getCustId(res, mysql, context, custEmail, complete){
   var inserts = [custEmail];
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
-          res.write(JSON.stringify(error));
-          res.end();
+          // res.write(JSON.stringify(error));
+          // res.end();
+          context.message("Please Register first");
+
+      }else{
+        console.log("HERE");
+        context.custid = results[0];
+        context.message ="Please Register First";
+        
+        
       }
-      context.custid = results[0].customer_id;
+      console.log(results[0]);
+      
 
       complete();
-      return results[0].customer_id;
+      // return results[0].customer_id;
   });
 }
 
