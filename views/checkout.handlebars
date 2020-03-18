@@ -18,50 +18,42 @@
     </ul>
 
    <h2 class="title1">Cart</h2>
-   <form class="cart formCart">
+
+   <form class="cart formCart" action="/buy" method="post">
     <table class="cart">
       <thead>
         <tr>
-          <th> Name </th>
+          <th> Product </th>
           <th> Quantity </th>
-          <th> Unit Price </th>
-          <th> Discount</th>
-          <th> Subtotal </th>
-          <th> Update </th>
+          <th> Unit Price($)</th>
+          <th> Subtotal($) </th>
           <th> Delete </th>
         </tr>
       </thead>
-       {{#each orderDetail}}
+       {{#each details}}
         <tr>
           <td>{{name}}</td>
           <td>{{quantity}}</td>
           <td>{{unit_price}}</td>
-          <td>{{discount}}</td>
           <td>{{subtotal}}</td>
           <td>
-            <form>
-                <input type ="hidden" value =
-              <input type="button" value="update">
-            </form>
-          </td>
-          <td>
-            <form>
+            <form action="/deleteItem" method="post">
               <input type="button" value="delete">
             </form></td>
         </tr>
         {{/each}}
     </table>
 
-      <h2 class="cart">{{total_price}}</h2>
+      <h2 class="cart" name="total" >Total: ${{total}}</h2>
 
       <br>
-      <label> {{note}}</label><br>
-      <textarea rows="4" cols="50" name="comment" form="usrform">
+      <label>note</label><br>
+      <textarea rows="4" cols="50" name="note" form="usrform">
       </textarea><br>
       <input class="cart" type="submit" value="checkOut" >
       </form>
-      <h3></h3>
-      <p></p>
+
+      <h2>{{message}}</h2>
 
   </body>
 </html>

@@ -225,8 +225,6 @@ function addOrder(res, mysql, context, custEmail, orderDelvMeth, complete){
 
         complete();
     });
-
-
 }
 
 // route for departments page that calls addOrder and getDepartments
@@ -720,7 +718,7 @@ app.post('/register', function(req, res){
 });
 
 function getOrder(res, mysql, context, complete){
-    var sql = "SELECT `order_id` FROM `Orders` WHERE `order_status` = ?";
+    var sql = "SELECT `order_id`,`order_date` FROM `Orders` WHERE `order_status` = ? ORDER BY `order_date` DESC";
     var inserts = [1];
 
     mysql.pool.query(sql, inserts, function(error, results, fields){
@@ -755,7 +753,6 @@ app.post('/addCart', function(req, res){
     let quantity = req.body.quantity;
     let price = req.body.price;
     let subtotal = quantity * price;
-    console.log(prodID);
 
     var context = {};
     var mysql = req.app.get('mysql');
@@ -765,6 +762,8 @@ app.post('/addCart', function(req, res){
       callbackCount++;
       if (callbackCount == 1) {
           let orderID = context.orderInfo.order_id;
+          req.session.oid = orderID;
+
           addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal, complete);
       }
 
@@ -776,7 +775,7 @@ app.post('/addCart', function(req, res){
 });
 
 function getDetails(res, mysql, context, orderID, complete) {
-  var sql = "SELECT * FROM `OrderDetails` WHERE `order_id` = ?";
+  var sql = "SELECT Products.name,`quantity`,`unit_price`,`subtotal`, sum(`subtotal`) AS `total` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
   var inserts = [orderID];
 
   mysql.pool.query(sql, inserts, function(error, results, fields){
@@ -784,23 +783,83 @@ function getDetails(res, mysql, context, orderID, complete) {
           res.write(JSON.stringify(error));
           res.end();
       }
-
+      context.total = results[0].total;
       context.details = results;
+
       complete();
   });
 }
 
 app.get('/checkout', function(req, res){
-    let orderID = req.session.oid;
-    console.log("session oid:", orderID);
+    var callbackCount = 0;
     var context = {};
     var mysql = req.app.get('mysql');
 
-    getDetails(res, mysql, context, orderID, complete);
-
+    getOrder(res, mysql, context, complete);
     function complete(){
-        res.render('checkout.handlebars', context);
+      callbackCount++;
+      if (callbackCount == 1) {
+          let orderID = context.orderInfo.order_id;
+          req.session.oid = orderID;
+          getDetails(res, mysql, context, orderID, complete);
+      }
 
+      if (callbackCount >= 2) {
+            res.render('checkout.handlebars', context);
+
+      }
+    }
+
+});
+
+// function getTotal(res, mysql, context, orderID, complete) {
+//   var sql = "";
+//   var inserts = [date, note, total, orderID];
+//
+//   mysql.pool.query(sql, inserts, function(error, results, fields){
+//       if(error){
+//           res.write(JSON.stringify(error));
+//           res.end();
+//       }
+//       complete();
+//   });
+// }
+
+function buy(res, mysql, context, note, total, orderID, complete) {
+  var sql = "UPDATE `Orders` SET `note`=?,`order_total`=?,`order_status`=? WHERE `order_id`=?;";
+  var inserts = [note, total, 2, orderID];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      context.message = "Order complete!";
+      complete();
+  });
+}
+
+app.post('/buy', function(req, res){
+    var callbackCount = 0;
+
+    let note = req.body.note;
+    let total = req.body.total;
+    var context = {};
+    var mysql = req.app.get('mysql');
+
+    getOrder(res, mysql, context, complete);
+    function complete(){
+      callbackCount++;
+      if (callbackCount == 1) {
+          let orderID = context.orderInfo.order_id;
+          req.session.oid = orderID;
+          buy(res, mysql, context, note, total, orderID, complete);
+      }
+
+      if (callbackCount >= 2) {
+            res.render('checkout.handlebars', context);
+
+      }
     }
 });
 
