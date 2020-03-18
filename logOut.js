@@ -1,2 +1,0 @@
-//reset the cookie
-
