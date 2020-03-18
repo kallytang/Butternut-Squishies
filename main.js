@@ -30,6 +30,49 @@ app.set('port', process.argv[2]);
 app.set('mysql', mysql);
 
 
+
+function logOut(req, complete){
+  req.session.cid=null;
+  req.session.oid=null;
+  req.session.email=null;
+  req.session.oStatus=null;
+  complete();
+  
+  
+}   
+
+function deleteUnfinishedOrder(res, mysql, context , complete){
+  var sql = "DELETE FROM `Orders` WHERE `order_status` = ?";
+  var inserts = [1];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+
+      // console.log("deleted unfinished orders");
+      complete();
+    
+  });
+}
+
+app.post('/logOut', function(req,res){
+  logOut(req, complete);
+  var callbackCount=0;
+  var context = {};
+  deleteUnfinishedOrder(res, mysql, context , complete);
+   
+  
+    function complete(){
+      callbackCount++;
+      if(callbackCount==1){
+        res.render('logout', context);
+      }
+      
+    }
+
+});
+
 // route for static home page
 app.get('/', function(req,res){
 

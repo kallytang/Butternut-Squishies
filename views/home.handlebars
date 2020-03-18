@@ -10,13 +10,18 @@
   <body>
     <h1 class ="storeTitle">Butternut Squishies Grocery Store</h1>
   
+    <form id="logout" action="/logOut" method="post">
+      <input type="submit" value="Log Out">
+    </form>
     <div>
     <ul class="nav">
       <li><a class="active tab" href="/">Home</a></li>
       <li><a class="tab" href="departments">Departments</a></li>
       <li><a class="tab" href="accounts">Account</a></li>
       <li><a class="tab" href="admin">Admin</a></li>
-      <li><a class="checkoutBox" href="checkout">Check Out</a></li>
+      <li><a class="checkoutBox" href="/checkout">Check Out</a></li>
+     
+      
     </ul>
     </div>
     
@@ -54,7 +59,7 @@
     </div>
 
     <script src="/static/app.js"></script>
-
+  <script src="main.js"></script>
     <br>
 
     <div class="intro">
