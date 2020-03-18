@@ -18,7 +18,6 @@
 
    <h2 class="title1">Cart</h2>
 
-   <form class="cart formCart" action="/buy" method="post">
     <table class="cart">
       <thead>
         <tr>
@@ -44,7 +43,8 @@
         </tr>
         {{/each}}
     </table>
-
+      <form class="cart formCart" action="/buy" method="post">
+        <input type ="hidden" name="detail_id" value={{detail_id}}>
       <h2 class="cart"  >Total: ${{total}} <input type="hidden" name="total" value ={{total}}></h2>
 
       <br>

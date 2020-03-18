@@ -194,13 +194,10 @@ function getCustId(res, mysql, context, custEmail, complete){
           context.message("Please Register first");
 
       }else{
-        console.log("HERE");
         context.custid = results[0];
         context.message ="Please Register First";
 
       }
-      console.log(results[0]);
-
       complete();
 
   });
@@ -345,7 +342,7 @@ app.get('/accounts', function(req, res){
   if(req.session.cid==null){
 
     res.render('accounts.handlebars', context);
-    console.log("here");
+
   }else{
     getCustomer(res, mysql, context, custID, complete);
 
@@ -524,7 +521,6 @@ app.get('/updateProducts/:prodID', function(req, res){
 
     }
     if(callbackCount >= 2){
-      console.log(context);
 
       res.render('updateProducts.handlebars', context);
     }
@@ -596,8 +592,6 @@ app.get('/updateOrders/:orderID', function(req, res){
   getSelectedOrder(res, mysql, context, orderID, complete);
 
   function complete(){
-
-      console.log(context);
 
       res.render('updateOrders.handlebars', context);
 
@@ -747,7 +741,7 @@ app.post('/addCart', function(req, res){
 
 //function to get details of a particular orderID
 function getDetails(res, mysql, context, orderID, complete) {
-  var sql = "SELECT Products.name,`quantity`,`unit_price`,`subtotal` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
+  var sql = "SELECT Products.name,`detail_id`,`quantity`,`unit_price`,`subtotal` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
   var inserts = [orderID];
 
   mysql.pool.query(sql, inserts, function(error, results, fields){
@@ -804,8 +798,10 @@ function getTotal(res, mysql, context, orderID, complete) {
 }
 
 function deleteDetail(res, mysql, context, detail_id, complete){
+
   var sql = "DELETE FROM `OrderDetails` WHERE `detail_id` = ?";
   var inserts = [detail_id];
+
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
@@ -859,6 +855,7 @@ function buy(res, mysql, context, note, total, orderID, complete) {
 }
 //route to buy product
 app.post('/buy', function(req, res){
+
     var callbackCount = 0;
     var custEmail= req.session.email;
     let note = req.body.note;
