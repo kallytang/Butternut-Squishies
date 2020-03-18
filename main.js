@@ -30,15 +30,15 @@ app.set('mysql', mysql);
 
 // route for static home page
 app.get('/', function(req,res){
-  
+
   var context = {};
   if(req.session.cid ==null){
     res.render('homeLogin', context);
   }else{
-    
+
     res.render('home', context);
   }
-  
+
 });
 
 // route for static home page
@@ -48,11 +48,11 @@ app.post('/', function(req,res){
   var custEmail = req.body.custEmail;
   getCustId(res, mysql, context, custEmail, complete);
 
-  
+
   // if(req.session.cid ==null){
   //   res.render('homeLogin', context);
   // }else{
-    
+
   //   res.render('home', context);
   // }
   function complete(){
@@ -64,19 +64,19 @@ app.post('/', function(req,res){
         console.log(req.session.cid);
         res.render('home', context);
       }
-     
+
     }else{
       if(callbackCount == 1){
         // res.render('departments.handlebars', context);
         res.render('homeLogin', context);
       }
     }
-    
-    
-  }
-  
 
-  
+
+  }
+
+
+
 });
 
 // route for static accounts page
@@ -200,11 +200,11 @@ function getCustId(res, mysql, context, custEmail, complete){
         console.log("HERE");
         context.custid = results[0];
         context.message ="Please Register First";
-        
-        
+
+
       }
       console.log(results[0]);
-      
+
 
       complete();
       // return results[0].customer_id;
@@ -377,10 +377,10 @@ app.post('/account', function(req, res){
 });
 
 
-app.get('/checkout', function(req,res){
-  var context = {};
-  res.render('checkout', context);
-});
+// app.get('/checkout', function(req,res){
+//   var context = {};
+//   res.render('checkout', context);
+// });
 
 // route that calls getAll functions to populate admin page
 app.get('/admin', function(req,res){
@@ -776,7 +776,7 @@ app.post('/addCart', function(req, res){
 });
 
 function getDetails(res, mysql, context, orderID, complete) {
-  var sql = "SELECT * FROM `Order_Details` WHERE `order_id` = ?";
+  var sql = "SELECT * FROM `OrderDetails` WHERE `order_id` = ?";
   var inserts = [orderID];
 
   mysql.pool.query(sql, inserts, function(error, results, fields){
@@ -790,9 +790,9 @@ function getDetails(res, mysql, context, orderID, complete) {
   });
 }
 
-app.post('/checkout', function(req, res){
-    let orderID = req.body.orderID;
-
+app.get('/checkout', function(req, res){
+    let orderID = req.session.oid;
+    console.log("session oid:", orderID);
     var context = {};
     var mysql = req.app.get('mysql');
 

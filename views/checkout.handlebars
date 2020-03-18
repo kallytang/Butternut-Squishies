@@ -1,15 +1,12 @@
 <html>
   <head>
-
     <meta charset="utf-8">
     <title>Butternut Squishies Grocery Store</title>
     <link rel="stylesheet" href="/static/style.css">
     <link rel="stylesheet" href="/static/admin.css">
     <link href='https://fonts.googleapis.com/css?family=Calligraffitti' rel='stylesheet'>
-
   </head>
   <body>
-
     <h1 class ="storeTitle" >Butternut Squishies Grocery Store</h1>
       <li class="registerButtonSection" ><a class="register" href="register">Register</a></li>
     <ul class="nav">
@@ -20,10 +17,9 @@
         <li><a class ="active checkoutBox" href="checkout">Check Out</a></li>
     </ul>
 
-  
    <h2 class="title1">Cart</h2>
    <form class="cart formCart">
-    <table class="cart">       
+    <table class="cart">
       <thead>
         <tr>
           <th> Name </th>
@@ -34,31 +30,17 @@
           <th> Update </th>
           <th> Delete </th>
         </tr>
-      </thead> 
+      </thead>
+       {{#each orderDetail}}
         <tr>
-          <td>Bananas</td>
-          <td>4</td>
-          <td>2.00</td>
-          <td>N/A</td>
-          <td>8.00</td>
+          <td>{{name}}</td>
+          <td>{{quantity}}</td>
+          <td>{{unit_price}}</td>
+          <td>{{discount}}</td>
+          <td>{{subtotal}}</td>
           <td>
             <form>
-              <input type="button" value="update">
-            </form>
-          </td>
-          <td>
-            <form>
-              <input type="button" value="delete">
-            </form></td>
-        </tr>   
-        <tr>
-          <td>Cashew Milk</td>
-          <td>4</td>
-          <td>2.00</td>
-          <td>N/A</td>
-          <td>5.00</td>
-          <td>
-            <form>
+                <input type ="hidden" value =
               <input type="button" value="update">
             </form>
           </td>
@@ -67,36 +49,19 @@
               <input type="button" value="delete">
             </form></td>
         </tr>
-        <tr>
-          <td>Brioche</td>
-          <td>4</td>
-          <td>2.00</td>
-          <td>N/A</td>
-          <td>8.00</td>
-          <td>
-            <form>
-              <input type="button" value="update">
-            </form>
-          </td>
-          <td>
-            <form>
-              <input type="button" value="delete">
-            </form></td>
-        </tr>
+        {{/each}}
     </table>
-     
-      <h2 class="cart">Total: $8.00</h2>
-      
+
+      <h2 class="cart">{{total_price}}</h2>
+
       <br>
-      <label> Type Notes Here(optional):</label><br>
+      <label> {{note}}</label><br>
       <textarea rows="4" cols="50" name="comment" form="usrform">
       </textarea><br>
       <input class="cart" type="submit" value="checkOut" >
       </form>
       <h3></h3>
       <p></p>
-
-   
 
   </body>
 </html>
