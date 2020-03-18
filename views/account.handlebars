@@ -60,7 +60,7 @@
         </fieldset>
          <fieldset>
             <div>Phone: {{custInfo.phone}}</div>
-            
+
         </fieldset>
         </form>
         <div>
@@ -89,13 +89,6 @@
           <td class ="thead">{{note}}</td>
           <td class ="thead">{{shipped_date}}</td>
           <td class ="thead">{{order_total}}</td>
-
-          <td class ="thead">
-            <form action="/admin" method="post">
-            <input type="hidden" name="order_id" value={{order_id}}>
-              <input class="button" type="submit" value="details">
-            </form>
-          </td>
         </tr>
 
       {{/each}}

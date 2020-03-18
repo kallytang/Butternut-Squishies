@@ -38,7 +38,6 @@
 
 
 {{#each products}}
-{{product_id}}
   <form action="/addCart" method="post">
   <tr>
       <input type="hidden" name="prodID" value="{{product_id}}">
@@ -60,7 +59,7 @@
           <input class="quantityBox" min="0" type="number" name="quantity" step="1">
       </td>
       <td class="itemsbox submitButton">
-          <button type="submit" form="form1" class="add" value="addToCart">Add to cart</button>
+          <input type="submit" class="add" value="addToCart">
       </td>
     </tr>
   </form>
