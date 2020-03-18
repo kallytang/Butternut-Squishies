@@ -775,7 +775,7 @@ app.post('/addCart', function(req, res){
 });
 
 function getDetails(res, mysql, context, orderID, complete) {
-  var sql = "SELECT Products.name,`quantity`,`unit_price`,`subtotal`, sum(`subtotal`) AS `total` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
+  var sql = "SELECT Products.name,`quantity`,`unit_price`,`subtotal` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
   var inserts = [orderID];
 
   mysql.pool.query(sql, inserts, function(error, results, fields){
@@ -783,7 +783,8 @@ function getDetails(res, mysql, context, orderID, complete) {
           res.write(JSON.stringify(error));
           res.end();
       }
-      context.total = results[0].total;
+      console.log(results);
+      //context.total = results[0].total;
       context.details = results;
 
       complete();
@@ -802,9 +803,10 @@ app.get('/checkout', function(req, res){
           let orderID = context.orderInfo.order_id;
           req.session.oid = orderID;
           getDetails(res, mysql, context, orderID, complete);
+          getTotal(res, mysql, context, orderID, complete)
       }
 
-      if (callbackCount >= 2) {
+      if (callbackCount >= 3) {
             res.render('checkout.handlebars', context);
 
       }
@@ -812,18 +814,21 @@ app.get('/checkout', function(req, res){
 
 });
 
-// function getTotal(res, mysql, context, orderID, complete) {
-//   var sql = "";
-//   var inserts = [date, note, total, orderID];
-//
-//   mysql.pool.query(sql, inserts, function(error, results, fields){
-//       if(error){
-//           res.write(JSON.stringify(error));
-//           res.end();
-//       }
-//       complete();
-//   });
-// }
+function getTotal(res, mysql, context, orderID, complete) {
+  var sql = "SELECT sum(`subtotal`) AS `total` FROM `OrderDetails` WHERE `order_id` = ?";
+  var inserts = [orderID];
+
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      // console.log(results);
+      context.total = results[0].total;
+      // context.details = results;
+      complete();
+  });
+}
 
 function buy(res, mysql, context, note, total, orderID, complete) {
   var sql = "UPDATE `Orders` SET `note`=?,`order_total`=?,`order_status`=? WHERE `order_id`=?;";
