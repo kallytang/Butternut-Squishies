@@ -49,33 +49,22 @@ app.post('/', function(req,res){
   getCustId(res, mysql, context, custEmail, complete);
 
 
-  // if(req.session.cid ==null){
-  //   res.render('homeLogin', context);
-  // }else{
-
-  //   res.render('home', context);
-  // }
   function complete(){
     callbackCount++;
     if(context.custid){
       req.session.cid = context.custid.customer_id;
       if(callbackCount == 1){
-        // res.render('departments.handlebars', context);
-        console.log(req.session.cid);
+
         res.render('home', context);
       }
 
     }else{
       if(callbackCount == 1){
-        // res.render('departments.handlebars', context);
+
         res.render('homeLogin', context);
       }
     }
-
-
   }
-
-
 
 });
 
@@ -192,8 +181,6 @@ function getCustId(res, mysql, context, custEmail, complete){
   var inserts = [custEmail];
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
-          // res.write(JSON.stringify(error));
-          // res.end();
           context.message("Please Register first");
 
       }else{
@@ -201,13 +188,11 @@ function getCustId(res, mysql, context, custEmail, complete){
         context.custid = results[0];
         context.message ="Please Register First";
 
-
       }
       console.log(results[0]);
 
-
       complete();
-      // return results[0].customer_id;
+
   });
 }
 
@@ -291,23 +276,6 @@ app.post('/product', function(req, res){
 });
 
 
-// app.get('/account', function(req, res){
-//   var callbackCount = 0;
-//   let custID = req.params.custID
-//   var context = {};
-//   var mysql = req.app.get('mysql');
-//   getCustId(res, mysql, context, complete);
-//   getAccount(res, mysql, context, custID, complete);
-//   function complete(){
-//       callbackCount++;
-//       if(callbackCount >= 2){
-//           res.render('account.handlebars', context);
-//       }
-//   }
-// });
-
-//for cookies session?
-
 // function that gets customer information based in user inputted email
 function getCustomer(res, mysql, context, custEmail, complete){
   var sql = "SELECT * FROM `Customers` WHERE `email` = ?";
@@ -357,30 +325,15 @@ app.post('/account', function(req, res){
         let customer_id = context.custInfo.customer_id;
         getOrders(res, mysql, context, customer_id, complete);
       }
-      // if(callbackCount == 2){
-      //   let order_id = context.custOrders.order_id;
-      //   getDetails(res, mysql, context, order_id, complete)
-      // }
-      // if(context.custOrders.order_id==NULL){
-      //   if(callbackCount >= 2){
-      //     //context.customerInfo = results;
-      //     res.render('account.handlebars', context);
-      //   }
-      // }
+
       if(callbackCount >= 2){
-        //context.customerInfo = results;
+
         res.render('account.handlebars', context);
       }
   }
 });
 
 
-// app.get('/checkout', function(req,res){
-//   var context = {};
-//   res.render('checkout', context);
-// });
-
-// route that calls getAll functions to populate admin page
 app.get('/admin', function(req,res){
   var context = {};
   var callbackCount=0;
@@ -523,7 +476,6 @@ app.get('/updateProducts/:prodID', function(req, res){
   var context = {};
   var mysql = req.app.get('mysql');
   var prodID;
-  // console.log(prodID);
 
   prodID = req.params.prodID;
   getSelectedProduct(res, mysql, context, prodID, complete);
@@ -537,8 +489,7 @@ app.get('/updateProducts/:prodID', function(req, res){
     }
     if(callbackCount >= 2){
       console.log(context);
-      //let deptID = context.departments.department_id;
-      //updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
+
       res.render('updateProducts.handlebars', context);
     }
   }
@@ -548,15 +499,15 @@ app.get('/updateProducts/:prodID', function(req, res){
 function getSelectedProduct(res, mysql, context, prodID, complete) {
   var sql = "SELECT * FROM `Products` WHERE `product_id`=?";
   var inserts = [prodID];
-  //console.log(prodID);
+
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
         res.write(JSON.stringify(error));
         res.end();
       }
-      //console.log(results);
+
       context.product=results[0];
-      //console.log(context.product);
+
       complete();
   });
 }
@@ -576,7 +527,6 @@ function updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPri
 }
 
 app.post('/updateProducts', function(req, res){
-    //callbackCount = 0;
 
     let deptID = req.body.deptID;
     let prodName = req.body.prodName;
@@ -587,46 +537,33 @@ app.post('/updateProducts', function(req, res){
     let prodStock = req.body.prodStock;
     let prodID = req.body.prodID;
 
-    console.log(prodName);
-    console.log(prodPrice);
-
     var context = {};
     var mysql = req.app.get('mysql');
 
-    //getDepartments(res, mysql, context, complete);
     updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
     function complete(){
-      //callbackCount++;
-      //if(callbackCount == 1){
-        //let deptID = context.departments.department_id;
 
         res.render('updateProducts.handlebars', context);
-      //}
+
     }
 });
 
 
 app.get('/updateOrders/:orderID', function(req, res){
-  //var callbackCount = 0;
+
   var context = {};
   var mysql = req.app.get('mysql');
   var orderID;
-  // console.log(prodID);
 
   orderID = req.params.orderID;
   getSelectedOrder(res, mysql, context, orderID, complete);
 
   function complete(){
-    // callbackCount++;
-    // if(callbackCount == 1){
-    //
-    // }
-    // if(callbackCount >= 2){
+
       console.log(context);
-      //let deptID = context.departments.department_id;
-      //updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete);
+
       res.render('updateOrders.handlebars', context);
-    // }
+
   }
 
 });
@@ -634,15 +571,14 @@ app.get('/updateOrders/:orderID', function(req, res){
 function getSelectedOrder(res, mysql, context, orderID, complete) {
   var sql = "SELECT * FROM `Orders` WHERE `order_id`=?";
   var inserts = [orderID];
-  //console.log(prodID);
+
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
         res.write(JSON.stringify(error));
         res.end();
       }
-      //console.log(results);
       context.order=results[0];
-      //console.log(context.product);
+
       complete();
   });
 }
@@ -662,7 +598,7 @@ function updateOrder(res, mysql, context, status, recDate, shipDate, orderID, co
 }
 
 app.post('/updateOrders', function(req, res){
-    //callbackCount = 0;
+
     let orderID = req.body.orderID;
     let status = req.body.status;
     let recDate = req.body.recDate;
@@ -671,15 +607,11 @@ app.post('/updateOrders', function(req, res){
     var context = {};
     var mysql = req.app.get('mysql');
 
-    //getDepartments(res, mysql, context, complete);
     updateOrder(res, mysql, context, status, recDate, shipDate, orderID, complete)
     function complete(){
-      //callbackCount++;
-      //if(callbackCount == 1){
-        //let deptID = context.departments.department_id;
 
         res.render('updateOrders.handlebars', context);
-      //}
+
     }
 });
 
@@ -783,8 +715,6 @@ function getDetails(res, mysql, context, orderID, complete) {
           res.write(JSON.stringify(error));
           res.end();
       }
-      console.log(results);
-      //context.total = results[0].total;
       context.details = results;
 
       complete();
