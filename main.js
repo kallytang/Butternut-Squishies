@@ -68,11 +68,11 @@ app.post('/', function(req,res){
 
 });
 
-// route for static accounts page
-app.get('/accounts', function(req,res){
-  var context = {};
-  res.render('accounts', context);
-});
+// // route for static accounts page
+// app.get('/accounts', function(req,res){
+//   var context = {};
+//   res.render('accounts', context);
+// });
 
 // route for static register page
 app.get('/register', function(req,res){
@@ -277,9 +277,25 @@ app.post('/product', function(req, res){
 
 
 // function that gets customer information based in user inputted email
-function getCustomer(res, mysql, context, custEmail, complete){
-  var sql = "SELECT * FROM `Customers` WHERE `email` = ?";
-  var inserts = [custEmail];
+// function getCustomer(res, mysql, context, custEmail, complete){
+//   var sql = "SELECT * FROM `Customers` WHERE `email` = ?";
+//   var inserts = [custEmail];
+
+//   mysql.pool.query(sql, inserts, function(error, results, fields){
+//       if(error){
+//           res.write(JSON.stringify(error));
+//           res.end();
+//       }
+//       context.custInfo = results[0];
+
+//       complete();
+
+//   });
+// }
+
+function getCustomer(res, mysql, context, custID, complete){
+  var sql = "SELECT * FROM `Customers` WHERE `customer_id` = ?";
+  var inserts = [custID];
 
   mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
@@ -311,27 +327,48 @@ function getOrders(res, mysql, context, customer_id, complete) {
 
 
 // route for accounts page that calls getCustomer and getOrders
-app.post('/account', function(req, res){
+app.get('/accounts', function(req, res){
   var callbackCount = 0;
-  let custEmail = req.body.custEmail;
+  var callBackNum=1; 
+  let custID = req.session.cid;
   var context = {};
   var mysql = req.app.get('mysql');
 
-  getCustomer(res, mysql, context, custEmail, complete);
+  if(req.session.cid==null){
+      
+    res.render('accounts.handlebars', context);
+    console.log("here");
+  }else{
+    getCustomer(res, mysql, context, custID, complete);
+
+  }
+    
 
   function complete(){
       callbackCount++;
       if(callbackCount == 1){
-        let customer_id = context.custInfo.customer_id;
+        let customer_id = req.session.cid;
         getOrders(res, mysql, context, customer_id, complete);
       }
-
+      // if(callbackCount == 2){
+      //   let order_id = context.custOrders.order_id;
+      //   getDetails(res, mysql, context, order_id, complete)
+      // }
+      // if(context.custOrders.order_id==NULL){
+      //   if(callbackCount >= 2){
+      //     //context.customerInfo = results;
+      //     res.render('account.handlebars', context);
+      //   }
+      // }
       if(callbackCount >= 2){
-
+        //context.customerInfo = results;
         res.render('account.handlebars', context);
       }
   }
 });
+
+
+
 
 
 app.get('/admin', function(req,res){
