@@ -203,17 +203,34 @@ function getAllProducts(res, mysql, context, complete){
 }
 
 // function to get all orders information for admin page
-function getAllOrders(res, mysql, context, complete){
-  mysql.pool.query("SELECT * FROM `Orders`", function(error, results, fields){
+function getAllOrders(res, mysql, context, complete) {
+  var sql = "SELECT * FROM `Orders` WHERE NOT `order_status` = ?";
+  var inserts = [1];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
       if(error){
           res.write(JSON.stringify(error));
           res.end();
       }
       context.orders = results;
-
       complete();
   });
-}
+} 
+
+
+
+// function getAllOrders(res, mysql, context, complete){
+//   mysql.pool.query("SELECT * FROM `Orders`", function(error, results, fields){
+//       if(error){
+//           res.write(JSON.stringify(error));
+//           res.end();
+//       }
+//       context.orders = results;
+
+//       complete();
+//   });
+// }
+
+
 
 // function to get all customers information for admin page
 function getAllCustomers(res, mysql, context, complete){
@@ -442,19 +459,19 @@ function addDepartment(res, mysql, context, dept_name, complete){
     });
 }
 
-// // function that deletes a customer from the Customers table
-// function deleteCustomer(res, mysql, context, customer_id, complete){
-//   var sql = "DELETE FROM `Customers` WHERE `customer_id` = ?";
-//   var inserts = [customer_id];
+// function that deletes a customer from the Customers table
+function deleteCustomer(res, mysql, context, customer_id, complete){
+  var sql = "DELETE FROM `Customers` WHERE `customer_id` = ?";
+  var inserts = [customer_id];
 
-//   mysql.pool.query(sql, inserts, function(error, results, fields){
-//       if(error){
-//           res.write(JSON.stringify(error));
-//           res.end();
-//       }
-//       complete();
-//   });
-// }
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      complete();
+  });
+}
 
 // function that deletes an order from the Orders table
 function deleteOrder(res, mysql, context, order_id, complete){
@@ -502,11 +519,11 @@ app.post('/admin', function(req,res){
   var context = {};
   var callbackCount=0;
   var mysql = req.app.get('mysql');
-  // if (req.body.customer_id) {
-  //   let customer_id = req.body.customer_id;
-  //   complete();
-  //   deleteCustomer(res, mysql, context, customer_id, complete);
-  // }
+  if (req.body.customer_id) {
+    let customer_id = req.body.customer_id;
+    complete();
+    deleteCustomer(res, mysql, context, customer_id, complete);
+  }
   if (req.body.order_id) {
     let order_id = req.body.order_id;
     complete();
