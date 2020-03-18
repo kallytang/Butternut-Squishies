@@ -154,7 +154,7 @@
 
     </table>
 
-     <h2 class="title1">Delete Customer</h2>
+     <h2 class="title1">Customers</h2>
     <table>
       <caption>Customers<caption>
       <thead>
@@ -167,7 +167,6 @@
           <th> State</th>
           <th> Zip</th>
           <th> Phone</th>
-          <th> Delete </th>
         </tr>
       </thead>
       {{#each customers}}
@@ -184,13 +183,6 @@
            <td>{{state}}</td>
            <td>{{zipcode}}</td>
            <td>{{phone}}</td>
-
-          <td>
-            <form action="/admin" method="post">
-            <input type="hidden" name= "customer_id" value={{customer_id}}>
-              <input class="button" type="submit" value="delete">
-            </form>
-          </td>
         </tr>
         {{/each}}
 

@@ -61,10 +61,10 @@ app.post('/', function(req,res){
         addOrder(res, mysql, context, custEmail, complete);
 
       }
-      
-      
+
+
       if(callbackCount == 2){
-        
+
         res.render('home', context);
       }
 
@@ -208,18 +208,14 @@ function getCustId(res, mysql, context, custEmail, complete){
 
 // function to start an order for a customer
 function addOrder(res, mysql, context, custEmail, complete){
- 
+
     var date = new Date();
     var sql = "INSERT INTO `Orders`(`customer_id`, `order_date`) VALUES ((SELECT `customer_id` FROM `Customers` WHERE `email`= ?), ?)";
     var inserts = [custEmail, date];
     mysql.pool.query(sql, inserts, function(error, results, fields){
         if(error){
           context.message = "error, please register with us first!";
-        }else{
-          context.message = "order created";
-          console.log("order added");
         }
-
         complete();
     });
 }
@@ -341,20 +337,20 @@ function getOrders(res, mysql, context, customer_id, complete) {
 // route for accounts page that calls getCustomer and getOrders
 app.get('/accounts', function(req, res){
   var callbackCount = 0;
-  var callBackNum=1; 
+  var callBackNum=1;
   let custID = req.session.cid;
   var context = {};
   var mysql = req.app.get('mysql');
 
   if(req.session.cid==null){
-      
+
     res.render('accounts.handlebars', context);
     console.log("here");
   }else{
     getCustomer(res, mysql, context, custID, complete);
 
   }
-    
+
 
   function complete(){
       callbackCount++;
@@ -362,18 +358,8 @@ app.get('/accounts', function(req, res){
         let customer_id = req.session.cid;
         getOrders(res, mysql, context, customer_id, complete);
       }
-      // if(callbackCount == 2){
-      //   let order_id = context.custOrders.order_id;
-      //   getDetails(res, mysql, context, order_id, complete)
-      // }
-      // if(context.custOrders.order_id==NULL){
-      //   if(callbackCount >= 2){
-      //     //context.customerInfo = results;
-      //     res.render('account.handlebars', context);
-      //   }
-      // }
+
       if(callbackCount >= 2){
-        //context.customerInfo = results;
         res.render('account.handlebars', context);
       }
   }
@@ -635,7 +621,7 @@ function getSelectedOrder(res, mysql, context, orderID, complete) {
   });
 }
 
-//updates the order on updateOrders page 
+//updates the order on updateOrders page
 function updateOrder(res, mysql, context, status, recDate, shipDate, orderID, complete) {
   var sql = "UPDATE `Orders` SET `order_status`=?, `received_date`=?, `shipped_date`=? WHERE `order_id`=?";
   var inserts = [status, recDate, shipDate, orderID];
@@ -729,7 +715,7 @@ function addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal
         complete();
     });
 }
-//function to display add cart page, 
+//function to display add cart page,
 app.post('/addCart', function(req, res){
     var callbackCount = 0;
 
@@ -774,6 +760,8 @@ function getDetails(res, mysql, context, orderID, complete) {
       complete();
   });
 }
+
+
 //checkout route page
 app.get('/checkout', function(req, res){
     var callbackCount = 0;
@@ -797,6 +785,7 @@ app.get('/checkout', function(req, res){
     }
 
 });
+
 //gets total of orderdetails in a particular orderID
 function getTotal(res, mysql, context, orderID, complete) {
   var sql = "SELECT sum(`subtotal`) AS `total` FROM `OrderDetails` WHERE `order_id` = ?";
@@ -807,12 +796,53 @@ function getTotal(res, mysql, context, orderID, complete) {
           res.write(JSON.stringify(error));
           res.end();
       }
-      // console.log(results);
+
       context.total = results[0].total;
-      // context.details = results;
+
       complete();
   });
 }
+
+function deleteDetail(res, mysql, context, detail_id, complete){
+  var sql = "DELETE FROM `OrderDetails` WHERE `detail_id` = ?";
+  var inserts = [detail_id];
+  mysql.pool.query(sql, inserts, function(error, results, fields){
+      if(error){
+          res.write(JSON.stringify(error));
+          res.end();
+      }
+      complete();
+  });
+}
+
+
+app.post('/checkout', function(req, res){
+    var callbackCount = 0;
+    let detail_id = req.body.detail_id;
+    var context = {};
+    var mysql = req.app.get('mysql');
+
+    deleteDetail(res, mysql, context, detail_id, complete);
+
+    function complete(){
+      callbackCount++;
+      if (callbackCount == 1) {
+          getOrder(res, mysql, context, complete);
+      }
+      if (callbackCount == 2) {
+          let orderID = context.orderInfo.order_id;
+          req.session.oid = orderID;
+          getDetails(res, mysql, context, orderID, complete);
+          getTotal(res, mysql, context, orderID, complete)
+      }
+
+      if (callbackCount >= 4) {
+            res.render('checkout.handlebars', context);
+
+      }
+    }
+
+});
 
 //function to "purchase"/update the page
 function buy(res, mysql, context, note, total, orderID, complete) {
@@ -824,7 +854,6 @@ function buy(res, mysql, context, note, total, orderID, complete) {
           res.write(JSON.stringify(error));
           res.end();
       }
-      context.message = "Order complete!";
       complete();
   });
 }
@@ -848,10 +877,10 @@ app.post('/buy', function(req, res){
       }
       if(callbackCount==2){
         addOrder(res, mysql, context, custEmail, complete);
-        console.log("made new order after checking out");
       }
 
       if (callbackCount >= 3) {
+            context.message = "Order complete!";
             res.render('checkout.handlebars', context);
 
       }
@@ -859,7 +888,7 @@ app.post('/buy', function(req, res){
 });
 
 
-// route that redirects in the case of a 404 eror
+// route that redirects in the case of a 404 error
 app.use(function(req,res){
   res.status(404);
   res.render('404');
