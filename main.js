@@ -12,6 +12,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var handlebars = require('express-handlebars').create({defaultLayout:'main'});
 
+//set up cookie
 app.use(cookieSession({
   name: 'session',
   cid: null,
@@ -53,6 +54,7 @@ app.post('/', function(req,res){
   function complete(){
     callbackCount++;
     if(context.custid){
+      //get email and id and put into the cookie
       req.session.cid = context.custid.customer_id;
       req.session.email = custEmail;
       if(callbackCount==1){
@@ -302,7 +304,7 @@ app.post('/product', function(req, res){
 
 //   });
 // }
-
+//gets customer by customer id and shows information of selected customer
 function getCustomer(res, mysql, context, custID, complete){
   var sql = "SELECT * FROM `Customers` WHERE `customer_id` = ?";
   var inserts = [custID];
@@ -380,7 +382,7 @@ app.get('/accounts', function(req, res){
 
 
 
-
+//route for admin page
 app.get('/admin', function(req,res){
   var context = {};
   var callbackCount=0;
@@ -518,6 +520,7 @@ app.post('/admin', function(req,res){
 
 });
 
+//update products page
 app.get('/updateProducts/:prodID', function(req, res){
   var callbackCount = 0;
   var context = {};
@@ -543,6 +546,7 @@ app.get('/updateProducts/:prodID', function(req, res){
 
 });
 
+//gets product by product id for updates page
 function getSelectedProduct(res, mysql, context, prodID, complete) {
   var sql = "SELECT * FROM `Products` WHERE `product_id`=?";
   var inserts = [prodID];
@@ -559,7 +563,7 @@ function getSelectedProduct(res, mysql, context, prodID, complete) {
   });
 }
 
-
+//updates the product after submitting on updates page
 function updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID, complete) {
   var sql = "UPDATE `Products` SET `department_id`=?,`name`=?,`image_path`=?,`price`=?,`description`=?,`sale`=?,`stock`=? WHERE `product_id`=?";
   var inserts = [deptID, prodName, prodImage, prodPrice, prodDesc, prodSale, prodStock, prodID];
@@ -572,7 +576,7 @@ function updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPri
       complete();
   });
 }
-
+//pudates product page
 app.post('/updateProducts', function(req, res){
 
     let deptID = req.body.deptID;
@@ -595,7 +599,7 @@ app.post('/updateProducts', function(req, res){
     }
 });
 
-
+//updates order and gets order id as a get request
 app.get('/updateOrders/:orderID', function(req, res){
 
   var context = {};
@@ -615,6 +619,7 @@ app.get('/updateOrders/:orderID', function(req, res){
 
 });
 
+//gets order by order id
 function getSelectedOrder(res, mysql, context, orderID, complete) {
   var sql = "SELECT * FROM `Orders` WHERE `order_id`=?";
   var inserts = [orderID];
@@ -630,7 +635,7 @@ function getSelectedOrder(res, mysql, context, orderID, complete) {
   });
 }
 
-
+//updates the order on updateOrders page 
 function updateOrder(res, mysql, context, status, recDate, shipDate, orderID, complete) {
   var sql = "UPDATE `Orders` SET `order_status`=?, `received_date`=?, `shipped_date`=? WHERE `order_id`=?";
   var inserts = [status, recDate, shipDate, orderID];
@@ -643,7 +648,7 @@ function updateOrder(res, mysql, context, status, recDate, shipDate, orderID, co
       complete();
   });
 }
-
+//route for updating orders
 app.post('/updateOrders', function(req, res){
 
     let orderID = req.body.orderID;
@@ -663,7 +668,7 @@ app.post('/updateOrders', function(req, res){
 });
 
 
-
+//functiont o add new customer
 function addCustomer(res, mysql, context, custName, custEmail, custAddr, custCity, custZip, custPhone, complete){
     var sql = "INSERT INTO `Customers` (`name`, `email`, `street_address`, `city`, `zipcode`, `phone`) VALUES (?, ?, ?, ?, ?, ?)";
     var inserts = [custName, custEmail, custAddr, custCity, custZip, custPhone];
@@ -676,7 +681,7 @@ function addCustomer(res, mysql, context, custName, custEmail, custAddr, custCit
         complete();
     });
 }
-
+//route for register page
 app.post('/register', function(req, res){
     let custName = req.body.custName;
     let custEmail = req.body.custEmail;
@@ -695,7 +700,7 @@ app.post('/register', function(req, res){
 
     }
 });
-
+//function to get most recent order that's been created
 function getOrder(res, mysql, context, complete){
     var sql = "SELECT `order_id`,`order_date` FROM `Orders` WHERE `order_status` = ? ORDER BY `order_date` DESC";
     var inserts = [1];
@@ -712,7 +717,7 @@ function getOrder(res, mysql, context, complete){
     });
 }
 
-
+//adds item into cart on products pages
 function addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal, complete){
     var sql = "INSERT INTO `OrderDetails`(`order_id`, `product_id`, `quantity`, `unit_price`, `subtotal`) VALUES (?, ?, ?, ?, ?)";
     var inserts = [orderID, prodID, quantity, price, subtotal];
@@ -724,7 +729,7 @@ function addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal
         complete();
     });
 }
-
+//function to display add cart page, 
 app.post('/addCart', function(req, res){
     var callbackCount = 0;
 
@@ -754,6 +759,7 @@ app.post('/addCart', function(req, res){
     }
 });
 
+//function to get details of a particular orderID
 function getDetails(res, mysql, context, orderID, complete) {
   var sql = "SELECT Products.name,`quantity`,`unit_price`,`subtotal` FROM `OrderDetails` JOIN `Products` ON OrderDetails.product_id = Products.product_id AND `order_id` = ?";
   var inserts = [orderID];
@@ -768,7 +774,7 @@ function getDetails(res, mysql, context, orderID, complete) {
       complete();
   });
 }
-
+//checkout route page
 app.get('/checkout', function(req, res){
     var callbackCount = 0;
     var context = {};
@@ -791,7 +797,7 @@ app.get('/checkout', function(req, res){
     }
 
 });
-
+//gets total of orderdetails in a particular orderID
 function getTotal(res, mysql, context, orderID, complete) {
   var sql = "SELECT sum(`subtotal`) AS `total` FROM `OrderDetails` WHERE `order_id` = ?";
   var inserts = [orderID];
@@ -808,6 +814,7 @@ function getTotal(res, mysql, context, orderID, complete) {
   });
 }
 
+//function to "purchase"/update the page
 function buy(res, mysql, context, note, total, orderID, complete) {
   var sql = "UPDATE `Orders` SET `note`=?,`order_total`=?,`order_status`=? WHERE `order_id`=?;";
   var inserts = [note, total, 2, orderID];
@@ -821,7 +828,7 @@ function buy(res, mysql, context, note, total, orderID, complete) {
       complete();
   });
 }
-
+//route to buy product
 app.post('/buy', function(req, res){
     var callbackCount = 0;
     var custEmail= req.session.email;
@@ -864,6 +871,7 @@ app.use(function(err, req, res, next){
   res.status(500);
   res.render('500');
 });
+
 
 app.listen(app.get('port'), function(){
   console.log('Express started on http://flip3.engr.oregonstate.edu/:' + app.get('port') + '; press Ctrl-C to terminate.');
