@@ -30,7 +30,7 @@ app.set('port', process.argv[2]);
 app.set('mysql', mysql);
 
 
-
+//makes cookie variables null
 function logOut(req, complete){
   req.session.cid=null;
   req.session.oid=null;
@@ -40,7 +40,7 @@ function logOut(req, complete){
   
   
 }   
-
+//deletes unfinished orders 
 function deleteUnfinishedOrder(res, mysql, context , complete){
   var sql = "DELETE FROM `Orders` WHERE `order_status` = ?";
   var inserts = [1];
@@ -442,19 +442,19 @@ function addDepartment(res, mysql, context, dept_name, complete){
     });
 }
 
-// function that deletes a customer from the Customers table
-function deleteCustomer(res, mysql, context, customer_id, complete){
-  var sql = "DELETE FROM `Customers` WHERE `customer_id` = ?";
-  var inserts = [customer_id];
+// // function that deletes a customer from the Customers table
+// function deleteCustomer(res, mysql, context, customer_id, complete){
+//   var sql = "DELETE FROM `Customers` WHERE `customer_id` = ?";
+//   var inserts = [customer_id];
 
-  mysql.pool.query(sql, inserts, function(error, results, fields){
-      if(error){
-          res.write(JSON.stringify(error));
-          res.end();
-      }
-      complete();
-  });
-}
+//   mysql.pool.query(sql, inserts, function(error, results, fields){
+//       if(error){
+//           res.write(JSON.stringify(error));
+//           res.end();
+//       }
+//       complete();
+//   });
+// }
 
 // function that deletes an order from the Orders table
 function deleteOrder(res, mysql, context, order_id, complete){
@@ -502,11 +502,11 @@ app.post('/admin', function(req,res){
   var context = {};
   var callbackCount=0;
   var mysql = req.app.get('mysql');
-  if (req.body.customer_id) {
-    let customer_id = req.body.customer_id;
-    complete();
-    deleteCustomer(res, mysql, context, customer_id, complete);
-  }
+  // if (req.body.customer_id) {
+  //   let customer_id = req.body.customer_id;
+  //   complete();
+  //   deleteCustomer(res, mysql, context, customer_id, complete);
+  // }
   if (req.body.order_id) {
     let order_id = req.body.order_id;
     complete();
@@ -601,7 +601,7 @@ function updateProduct(res, mysql, context, deptID, prodName, prodImage, prodPri
       complete();
   });
 }
-//pudates product page
+//updates product page
 app.post('/updateProducts', function(req, res){
 
     let deptID = req.body.deptID;
