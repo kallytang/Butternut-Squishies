@@ -44,12 +44,12 @@
         {{/each}}
     </table>
 
-      <h2 class="cart" name="total" >Total: ${{total}}</h2>
+      <h2 class="cart"  >Total: ${{total}} <input type="hidden" name="total" value ={{total}}></h2>
 
       <br>
       <label>note</label><br>
-      <textarea rows="4" cols="50" name="note" form="usrform">
-      </textarea><br>
+      <input type="text" rows="4" cols="50" name="note" >
+      <br>
       <input class="cart" type="submit" value="checkOut" >
       </form>
 
