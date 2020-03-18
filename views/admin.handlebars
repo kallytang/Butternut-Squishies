@@ -74,7 +74,7 @@
           <th> Product Id </th>
           <th> Name </th>
           <th> Description </th>
-          <th> Department </th>
+          <th> Department ID</th>
           <th> Price </th>
           <th> Quantity/Stock </th>
           <th> Sale </th>
@@ -90,7 +90,7 @@
           <td>{{product_id}}</td>
           <td>{{name}}</td>
           <td>{{description}}</td>
-          <td>{{department}}</td>
+          <td>{{department_id}}</td>
           <td>{{price}}</td>
           <td>{{stock}}</td>
           <td>{{sale}}</td>
@@ -121,7 +121,6 @@
       <thead>
         <tr>
           <th>OrderID </th>
-          <th>Customer Name</th>
           <th>Order Status </th>
           <th>Order Date </th>
           <th>Received Date</th>
@@ -136,7 +135,6 @@
       {{#each orders}}
         <tr>
           <td>{{order_id}}</td>
-          <td>{{name}}</td>
           <td>{{order_status}}</td>
           <td>{{order_date}}</td>
           <td>{{received_date}}</td>

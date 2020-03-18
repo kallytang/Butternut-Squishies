@@ -16,6 +16,7 @@ app.use(cookieSession({
   name: 'session',
   cid: null,
   oid: null,
+  email:null,
   oStatus:null,
   keys: ["key", "key"]
 }))
@@ -53,8 +54,15 @@ app.post('/', function(req,res){
     callbackCount++;
     if(context.custid){
       req.session.cid = context.custid.customer_id;
-      if(callbackCount == 1){
+      req.session.email = custEmail;
+      if(callbackCount==1){
+        addOrder(res, mysql, context, custEmail, complete);
 
+      }
+      
+      
+      if(callbackCount == 2){
+        
         res.render('home', context);
       }
 
@@ -197,7 +205,8 @@ function getCustId(res, mysql, context, custEmail, complete){
 }
 
 // function to start an order for a customer
-function addOrder(res, mysql, context, custEmail, orderDelvMeth, complete){
+function addOrder(res, mysql, context, custEmail, complete){
+ 
     var date = new Date();
     var sql = "INSERT INTO `Orders`(`customer_id`, `order_date`) VALUES ((SELECT `customer_id` FROM `Customers` WHERE `email`= ?), ?)";
     var inserts = [custEmail, date];
@@ -206,6 +215,7 @@ function addOrder(res, mysql, context, custEmail, orderDelvMeth, complete){
           context.message = "error, please register with us first!";
         }else{
           context.message = "order created";
+          console.log("order added");
         }
 
         complete();
@@ -213,24 +223,24 @@ function addOrder(res, mysql, context, custEmail, orderDelvMeth, complete){
 }
 
 // route for departments page that calls addOrder and getDepartments
-app.post('/departments', function(req, res){
+// app.post('/departments', function(req, res){
 
-  var callbackCount = 0;
-  let custEmail = req.body.custEmail;
-  let orderDelvMeth = req.body.orderDelvMeth;
-  var context = {};
-  var mysql = req.app.get('mysql');
+//   var callbackCount = 0;
+//   let custEmail = req.body.custEmail;
+//   let orderDelvMeth = req.body.orderDelvMeth;
+//   var context = {};
+//   var mysql = req.app.get('mysql');
 
-  addOrder(res, mysql, context, custEmail, orderDelvMeth, complete);
-  getDepartments(res, mysql, context, complete);
+//   addOrder(res, mysql, context, custEmail, orderDelvMeth, complete);
+//   getDepartments(res, mysql, context, complete);
 
-  function complete(){
-      callbackCount++;
-      if(callbackCount >= 2){
-          res.render('departments.handlebars', context);
-      }
-  }
-});
+//   function complete(){
+//       callbackCount++;
+//       if(callbackCount >= 2){
+//           res.render('departments.handlebars', context);
+//       }
+//   }
+// });
 
 // route for departments page that calls getDepartments
 app.get('/departments', function(req, res){
@@ -732,6 +742,7 @@ app.post('/addCart', function(req, res){
       if (callbackCount == 1) {
           let orderID = context.orderInfo.order_id;
           req.session.oid = orderID;
+          context.message="Item has been added";
 
           addCart(res, mysql, context, orderID, prodID, quantity, price, subtotal, complete);
       }
@@ -813,7 +824,7 @@ function buy(res, mysql, context, note, total, orderID, complete) {
 
 app.post('/buy', function(req, res){
     var callbackCount = 0;
-
+    var custEmail= req.session.email;
     let note = req.body.note;
     let total = req.body.total;
     var context = {};
@@ -826,9 +837,14 @@ app.post('/buy', function(req, res){
           let orderID = context.orderInfo.order_id;
           req.session.oid = orderID;
           buy(res, mysql, context, note, total, orderID, complete);
+
+      }
+      if(callbackCount==2){
+        addOrder(res, mysql, context, custEmail, complete);
+        console.log("made new order after checking out");
       }
 
-      if (callbackCount >= 2) {
+      if (callbackCount >= 3) {
             res.render('checkout.handlebars', context);
 
       }
